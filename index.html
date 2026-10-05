@@ -32,7 +32,7 @@ button{border:0;border-radius:14px;padding:13px 14px;font-weight:900;font-size:1
 #inventoryList{display:grid;gap:8px;margin-top:12px}.item{display:grid;grid-template-columns:42px 1fr auto;gap:9px;align-items:center;text-align:left;background:#ffffff09;border:1px solid #ffffff15;border-radius:12px;padding:9px}.itemIcon{font-size:24px}.itemName{font-weight:900;font-size:12px}.itemStat{font-size:10px;color:#b9c5bc}.equip{padding:8px 10px;font-size:11px;background:#6f8f48;color:white}.equipped{background:#2e6b43}
 #joy{position:absolute;left:32px;bottom:max(28px,env(safe-area-inset-bottom));width:94px;height:94px;border-radius:50%;background:#ffffff10;border:2px solid #ffffff12;pointer-events:none}
 #stick{position:absolute;width:38px;height:38px;border-radius:50%;background:#ffffff29;left:26px;top:26px;border:1px solid #ffffff2a}
-#skill{position:absolute;right:22px;bottom:max(36px,env(safe-area-inset-bottom));width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#7b4b18,#2b1709);border:3px solid #c38b3e;display:grid;place-items:center;font-size:10px;font-weight:900;pointer-events:none;text-align:center}#buildBar{position:absolute;left:50%;bottom:max(28px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:7px;pointer-events:auto}.buildBtn{width:62px;min-height:54px;padding:5px 4px;border-radius:12px;background:#14241a;color:#fff;border:1px solid #ffffff25;font-size:10px;line-height:1.15}.buildBtn b{display:block;font-size:20px;margin-bottom:2px}.buildBtn.active{outline:2px solid #ffd468;background:#3b2c13}#boosts{position:absolute;left:12px;top:116px;display:grid;gap:5px}.boostChip{background:#07120bcc;border:1px solid #ffffff20;border-radius:9px;padding:5px 8px;font-size:10px;font-weight:850}.boostChip strong{color:#ffd468}
+#skill{position:absolute;right:22px;bottom:max(36px,env(safe-area-inset-bottom));width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#7b4b18,#2b1709);border:3px solid #c38b3e;display:grid;place-items:center;font-size:10px;font-weight:900;pointer-events:none;text-align:center}#buildBar{position:absolute;left:50%;bottom:max(28px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;gap:7px;pointer-events:auto}.buildBtn{width:54px;min-height:54px;padding:5px 4px;border-radius:12px;background:#14241a;color:#fff;border:1px solid #ffffff25;font-size:10px;line-height:1.15}.buildBtn b{display:block;font-size:20px;margin-bottom:2px}.buildBtn.active{outline:2px solid #ffd468;background:#3b2c13}#boosts{position:absolute;left:12px;top:116px;display:grid;gap:5px}.boostChip{background:#07120bcc;border:1px solid #ffffff20;border-radius:9px;padding:5px 8px;font-size:10px;font-weight:850}.boostChip strong{color:#ffd468}
 .rCommon{color:#ddd}.rUncommon{color:#76df8c}.rRare{color:#65aaff}.rEpic{color:#cb7cff}.rLegendary{color:#ffbf47}
 </style>
 </head>
@@ -48,7 +48,7 @@ button{border:0;border-radius:14px;padding:13px 14px;font-weight:900;font-size:1
       <div class="stat"><span class="ico">📦</span><span id="chests">0</span></div>
     </div>
     <div class="objective">
-      <div class="objTitle">Kill Them All</div>
+      <div class="objTitle" id="objectiveTitle">Kill Them All</div>
       <div class="objSub"><span id="killText">0 / 0</span> enemies</div>
       <div class="progress"><i id="killBar"></i></div>
     </div>
@@ -60,7 +60,13 @@ button{border:0;border-radius:14px;padding:13px 14px;font-weight:900;font-size:1
   <div id="msg">LEVEL CLEAR</div>
   <div class="toast" id="toast"></div>
   <div id="joy"><div id="stick"></div></div>
-  <div id="skill">AUTO<br>ATTACK</div><div id="boosts"></div><div id="buildBar"><button class="buildBtn" id="turretBtn"><b>🏹</b>Turret<br>30 🪵</button><button class="buildBtn" id="fenceBtn"><b>🪵</b>Fence<br>8 🪵</button></div>
+  <div id="skill">AUTO<br>ATTACK</div><div id="boosts"></div><div id="buildBar">
+<button class="buildBtn" id="turretBtn"><b>🏹</b>Turret<br>30 🪵</button>
+<button class="buildBtn" id="fenceBtn"><b>🪵</b>Fence<br>8 🪵</button>
+<button class="buildBtn" id="trapBtn"><b>🪤</b>Spikes<br>12 🪵</button>
+<button class="buildBtn" id="fireBtn"><b>🔥</b>Fire<br>18 🪵</button>
+<button class="buildBtn" id="upgradeBuildBtn"><b>🔨</b>Upgrade<br>Build</button>
+</div>
 </div>
 
 <div class="modal" id="upgradeCard">
@@ -116,7 +122,7 @@ let W=390,H=844,dpr=1,last=0,state='menu',level=1;
 const SAVE='reach100SaveV2';
 const defaultSave={unlocked:1,gold:0,wood:0,gems:0,chests:0,totalKills:0,weaponLevel:1,inventory:[],equipped:{weapon:null,armor:null,boots:null,charm:null}};
 let save=loadSave();
-let player,enemies=[],drops=[],chests=[],trees=[],upgradePads=[],forge=null,floaters=[],particles=[],turrets=[],fences=[],projectiles=[],cam={x:0,y:0},keys={},joyVec={x:0,y:0},activePointer=null;
+let player,enemies=[],drops=[],chests=[],trees=[],upgradePads=[],forge=null,floaters=[],particles=[],turrets=[],fences=[],traps=[],campfires=[],projectiles=[],baseCore=null,defenseMode=false,cam={x:0,y:0},keys={},joyVec={x:0,y:0},activePointer=null;
 let stageKills=0,targetKills=0,spawnedKills=0,stageTreeCuts=0,stageChests=0,buildMode=null;let boosts={frenzy:0,magnet:0,shield:0,haste:0};
 const world={w:1900,h:1900};
 const rarityTable=[
@@ -145,10 +151,10 @@ function weaponBase(){const lv=save.weaponLevel;return {damage:24+(lv-1)*4.5,ran
 function weaponCost(){const lv=save.weaponLevel;return {gold:70+lv*45+Math.floor(lv*lv*3),wood:10+lv*5}}
 function start(n){level=clamp(n,1,100);ov.style.display='none';closeModals();state='play';buildStage();updateHud()}
 function buildStage(){
- enemies=[];drops=[];chests=[];trees=[];upgradePads=[];floaters=[];particles=[];turrets=[];fences=[];projectiles=[];boosts={frenzy:0,magnet:0,shield:0,haste:0};buildMode=null;stageKills=0;spawnedKills=0;stageTreeCuts=0;stageChests=0;
+ enemies=[];drops=[];chests=[];trees=[];upgradePads=[];floaters=[];particles=[];turrets=[];fences=[];traps=[];campfires=[];projectiles=[];boosts={frenzy:0,magnet:0,shield:0,haste:0};buildMode=null;defenseMode=level%10===0;baseCore=defenseMode?{x:world.w/2,y:world.h/2+70,r:28,hp:340+level*14,maxHp:340+level*14}:null;stageKills=0;spawnedKills=0;stageTreeCuts=0;stageChests=0;
  const gb=gearBonuses(),wb=weaponBase();
  player={x:world.w/2,y:world.h/2,r:18,maxHp:100+gb.maxHp,hp:100+gb.maxHp,speed:168+gb.speed,damage:wb.damage+gb.damage,range:wb.range,pickup:120+gb.pickup,armor:gb.armor,spin:0,ifr:0};
- targetKills=14+Math.floor(level*1.55);
+ targetKills=(defenseMode?24:14)+Math.floor(level*(defenseMode?1.8:1.55));document.getElementById('objectiveTitle').textContent=defenseMode?'DEFEND THE CAMP':'Kill Them All';
  const treeCount=34+Math.min(30,Math.floor(level*.4));
  for(let i=0;i<treeCount;i++){let hp=32+Math.floor(level*.22);trees.push({x:rand(80,world.w-80),y:rand(80,world.h-80),r:rand(20,29),hp,maxHp:hp,hitCd:0,flash:0,dead:false})}
  const chestCount=4+Math.floor(level/20);
@@ -262,24 +268,16 @@ $('#gearBtn').addEventListener('click',()=>{renderInventory();inventoryCard.styl
 $('#equipmentMenu').addEventListener('click',()=>{renderInventory();inventoryCard.style.display='block';state='menu'});
 function applyBoost(type){if(type==='heal'){player.hp=Math.min(player.maxHp,player.hp+player.maxHp*.35);showToast('Healing boost +35% HP');return}boosts[type]=Math.max(boosts[type]||0,type==='shield'?10:12);showToast(type.toUpperCase()+' boost!')}
 function updateBoostHud(){const box=$('#boosts');box.innerHTML='';for(const [k,v] of Object.entries(boosts)){if(v>0){const d=document.createElement('div');d.className='boostChip';d.innerHTML='<strong>'+k.toUpperCase()+'</strong> '+v.toFixed(1)+'s';box.appendChild(d)}}}
-function placeBuild(type,wx,wy){const cost=type==='turret'?30:8;if(save.wood<cost){showToast('Not enough wood');return}if(Math.hypot(wx-player.x,wy-player.y)>180){showToast('Build closer to your character');return}save.wood-=cost;persist();if(type==='turret')turrets.push({x:wx,y:wy,r:17,range:250,cd:0,hp:120+level*2,maxHp:120+level*2});else fences.push({x:wx,y:wy,w:56,h:15,hp:90+level*1.5,maxHp:90+level*1.5});buildMode=null;$('#turretBtn').classList.remove('active');$('#fenceBtn').classList.remove('active');showToast(type==='turret'?'Turret built':'Fence built');updateHud()}
-function update(dt){
- if(state!=='play')return;
- for(const k of Object.keys(boosts))boosts[k]=Math.max(0,boosts[k]-dt);updateBoostHud();
- let vx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vy=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);vx+=joyVec.x;vy+=joyVec.y;let m=Math.hypot(vx,vy)||1;if(Math.hypot(vx,vy)>.05){vx/=m;vy/=m}else{vx=0;vy=0}
- const moveMult=boosts.haste>0?1.38:1;player.x=clamp(player.x+vx*player.speed*moveMult*dt,30,world.w-30);player.y=clamp(player.y+vy*player.speed*moveMult*dt,30,world.h-30);player.spin+=dt*(5.8+save.weaponLevel*.015)*(boosts.frenzy>0?1.45:1);player.ifr=Math.max(0,player.ifr-dt);
- for(const e of enemies){if(e.dead)continue;e.hitCd=Math.max(0,e.hitCd-dt);e.flash=Math.max(0,e.flash-dt);let dx=player.x-e.x,dy=player.y-e.y,dm=Math.hypot(dx,dy)||1;e.x+=dx/dm*e.speed*dt;e.y+=dy/dm*e.speed*dt;if(dm<player.range+e.r)damageEnemy(e,player.damage*(boosts.frenzy>0?1.65:1));for(const f of fences){if(f.hp<=0)continue;if(Math.abs(e.x-f.x)<f.w/2+e.r&&Math.abs(e.y-f.y)<f.h/2+e.r){e.x-=dx/dm*e.speed*dt*2.2;f.hp-=e.damage*dt*.5}}if(dm<player.r+e.r+2&&player.ifr<=0){let taken=Math.max(1,e.damage-player.armor-(boosts.shield>0?6:0));player.hp-=taken;floaters.push({x:player.x,y:player.y-25,text:'-'+Math.round(taken),life:.6,color:'#ff7b74'});player.ifr=.48;if(player.hp<=0)defeat()}}
- enemies=enemies.filter(e=>!e.dead);fences=fences.filter(f=>f.hp>0);
- for(const turret of turrets){turret.cd=Math.max(0,turret.cd-dt);let nearest=null,nd=turret.range;for(const e of enemies){let dd=dist(turret,e);if(dd<nd){nd=dd;nearest=e}}if(nearest&&turret.cd<=0){turret.cd=.62;let dx=nearest.x-turret.x,dy=nearest.y-turret.y,m=Math.hypot(dx,dy)||1;projectiles.push({x:turret.x,y:turret.y,vx:dx/m*430,vy:dy/m*430,damage:14+save.weaponLevel*1.2,life:1.2})}}
- for(const pr of projectiles){pr.x+=pr.vx*dt;pr.y+=pr.vy*dt;pr.life-=dt;for(const e of enemies){if(!e.dead&&Math.hypot(pr.x-e.x,pr.y-e.y)<e.r+5){damageEnemy(e,pr.damage);pr.life=0;break}}}projectiles=projectiles.filter(p=>p.life>0);
- for(const t of trees){if(t.dead)continue;t.hitCd=Math.max(0,t.hitCd-dt);t.flash=Math.max(0,t.flash-dt);if(dist(player,t)<player.range+t.r*.55)damageTree(t,player.damage)}
- trees=trees.filter(t=>!t.dead);
- for(const d of drops){let dd=dist(player,d),pickup=player.pickup*(boosts.magnet>0?2.4:1);if(dd<pickup){d.x+=(player.x-d.x)*dt*(boosts.magnet>0?10:6);d.y+=(player.y-d.y)*dt*(boosts.magnet>0?10:6)}if(dd<24){if(d.type==='gold')save.gold+=d.amount;if(d.type==='wood')save.wood+=d.amount;if(d.type==='gem')save.gems+=d.amount;if(d.type==='boost')applyBoost(d.boost);d.dead=true;persist()}}
- drops=drops.filter(d=>!d.dead);
- for(const c of chests)if(!c.open&&dist(player,c)<30)openChest(c);
- interactStations();
- for(const f of floaters){f.y-=25*dt;f.life-=dt}floaters=floaters.filter(f=>f.life>0);for(const p of particles)p.life-=dt;particles=particles.filter(p=>p.life>0);
- cam.x+=(clamp(player.x-W/2,0,world.w-W)-cam.x)*Math.min(1,dt*7);cam.y+=(clamp(player.y-H/2,0,world.h-H)-cam.y)*Math.min(1,dt*7);updateHud()
+function clearBuildButtons(){for(const id of ['turretBtn','fenceBtn','trapBtn','fireBtn','upgradeBuildBtn'])$('#'+id).classList.remove('active')}
+function placeBuild(type,wx,wy){
+ if(type==='upgrade'){let choices=[...turrets,...fences].filter(o=>Math.hypot(o.x-wx,o.y-wy)<48);if(!choices.length){showToast('Tap a turret or fence to upgrade');return}let o=choices[0],cost=o.level===1?18:32;if(o.level>=3){showToast('Structure is max level');buildMode=null;clearBuildButtons();return}if(save.wood<cost){showToast('Need '+cost+' wood');return}save.wood-=cost;o.level++;if(o.range){o.range+=55;o.maxHp+=45;o.hp=o.maxHp}else{o.maxHp+=65;o.hp=o.maxHp;o.w+=8}persist();showToast((o.range?'Turret':'Fence')+' upgraded to Tier '+o.level);buildMode=null;clearBuildButtons();updateHud();return}
+ const costs={turret:30,fence:8,trap:12,fire:18},cost=costs[type];if(save.wood<cost){showToast('Not enough wood');return}if(Math.hypot(wx-player.x,wy-player.y)>190){showToast('Build closer to your character');return}
+ save.wood-=cost;persist();
+ if(type==='turret')turrets.push({x:wx,y:wy,r:17,level:1,range:245,cd:0,hp:125+level*2,maxHp:125+level*2});
+ if(type==='fence')fences.push({x:wx,y:wy,w:56,h:15,level:1,hp:95+level*1.5,maxHp:95+level*1.5});
+ if(type==='trap')traps.push({x:wx,y:wy,r:30,cd:0,life:28});
+ if(type==='fire')campfires.push({x:wx,y:wy,r:88,life:36});
+ buildMode=null;clearBuildButtons();showToast(type==='turret'?'Arrow turret built':type==='fence'?'Fence built':type==='trap'?'Spike trap built':'Campfire built');updateHud()
 }
 function circle(x,y,r,fill){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill()}
 function drawTree(t){
@@ -295,8 +293,8 @@ function draw(){
  for(const u of upgradePads){if(u.used)continue;let pulse=1+Math.sin(performance.now()/250)*.08;ctx.save();ctx.translate(u.x,u.y);ctx.scale(pulse,pulse);circle(0,0,34,'#8c6cff38');circle(0,0,23,'#8c6cff62');ctx.fillStyle='#fff';ctx.font='800 12px system-ui';ctx.textAlign='center';ctx.fillText('Upgrade',0,-42);ctx.restore()}
  if(forge){ctx.save();ctx.translate(forge.x,forge.y);circle(0,0,38,'#e1912f35');ctx.fillStyle='#45301d';ctx.fillRect(-22,-14,44,28);ctx.fillStyle='#b8b2a7';ctx.fillRect(-17,-10,34,9);ctx.font='18px system-ui';ctx.textAlign='center';ctx.fillText('🔨',0,9);ctx.fillStyle='#fff';ctx.font='800 12px system-ui';ctx.fillText('Blacksmith',0,-45);ctx.restore()}
  for(const d of drops){ctx.font=d.type==='boost'?'22px system-ui':'18px system-ui';ctx.textAlign='left';const bi={frenzy:'⚡',magnet:'🧲',shield:'🛡️',haste:'💨',heal:'❤️'};ctx.fillText(d.type==='gold'?'🪙':d.type==='wood'?'🪵':d.type==='gem'?'💎':bi[d.boost],d.x-9,d.y+7)}
- for(const f of fences){ctx.save();ctx.shadowColor='#0008';ctx.shadowBlur=8;ctx.shadowOffsetY=5;ctx.fillStyle='#684623';ctx.fillRect(f.x-f.w/2,f.y-f.h/2,f.w,f.h);ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#a8783d';for(let i=-2;i<=2;i++){ctx.fillRect(f.x+i*12-2,f.y-f.h/2-9,5,f.h+18);ctx.beginPath();ctx.moveTo(f.x+i*12-4,f.y-f.h/2-9);ctx.lineTo(f.x+i*12,f.y-f.h/2-15);ctx.lineTo(f.x+i*12+4,f.y-f.h/2-9);ctx.fill()}ctx.fillStyle='#0008';ctx.fillRect(f.x-f.w/2,f.y-19,f.w,4);ctx.fillStyle='#75d36b';ctx.fillRect(f.x-f.w/2,f.y-19,f.w*Math.max(0,f.hp/f.maxHp),4);ctx.restore()}
- for(const turret of turrets){ctx.save();ctx.translate(turret.x,turret.y);ctx.shadowColor='#0008';ctx.shadowBlur=10;ctx.shadowOffsetY=5;circle(0,4,20,'#49351f');ctx.shadowBlur=0;ctx.shadowOffsetY=0;circle(0,0,16,'#79592d');ctx.fillStyle='#b98b45';ctx.fillRect(-5,-22,10,26);ctx.fillStyle='#e0c78a';ctx.beginPath();ctx.moveTo(0,-31);ctx.lineTo(-5,-19);ctx.lineTo(5,-19);ctx.fill();ctx.strokeStyle='#ddc67d';ctx.beginPath();ctx.arc(0,-7,10,-1.2,1.2);ctx.stroke();ctx.restore()}
+ for(const f of fences){ctx.save();ctx.shadowColor='#0008';ctx.shadowBlur=8;ctx.shadowOffsetY=5;ctx.fillStyle='#684623';ctx.fillRect(f.x-f.w/2,f.y-f.h/2,f.w,f.h);ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#a8783d';for(let i=-2;i<=2;i++){ctx.fillRect(f.x+i*12-2,f.y-f.h/2-9,5,f.h+18);ctx.beginPath();ctx.moveTo(f.x+i*12-4,f.y-f.h/2-9);ctx.lineTo(f.x+i*12,f.y-f.h/2-15);ctx.lineTo(f.x+i*12+4,f.y-f.h/2-9);ctx.fill()}ctx.fillStyle='#0008';ctx.fillRect(f.x-f.w/2,f.y-19,f.w,4);ctx.fillStyle='#75d36b';ctx.fillRect(f.x-f.w/2,f.y-19,f.w*Math.max(0,f.hp/f.maxHp),4);ctx.fillStyle='#fff';ctx.font='800 8px system-ui';ctx.textAlign='center';ctx.fillText('T'+(f.level||1),f.x,f.y+22);ctx.restore()}
+ for(const turret of turrets){ctx.save();ctx.translate(turret.x,turret.y);let tier=turret.level||1;ctx.shadowColor='#0008';ctx.shadowBlur=10;ctx.shadowOffsetY=5;circle(0,4,20+tier*2,'#49351f');ctx.shadowBlur=0;ctx.shadowOffsetY=0;circle(0,0,16+tier,'#79592d');ctx.fillStyle=tier===3?'#9b7040':'#b98b45';ctx.fillRect(-5,-22-tier*2,10,26+tier*2);ctx.fillStyle=tier===3?'#efb34f':'#e0c78a';ctx.beginPath();ctx.moveTo(0,-31-tier*2);ctx.lineTo(-6,-19);ctx.lineTo(6,-19);ctx.fill();if(tier>=2){ctx.fillStyle='#d9c08d';ctx.fillRect(-16,-7,32,5)}if(tier===3){ctx.fillStyle='#3f3426';ctx.fillRect(-13,-13,26,10);ctx.fillStyle='#e28d3d';ctx.fillRect(-4,-17,8,5)}ctx.fillStyle='#fff';ctx.font='800 9px system-ui';ctx.textAlign='center';ctx.fillText('T'+tier,0,31);ctx.restore()}
  for(const pr of projectiles){ctx.save();ctx.shadowBlur=10;ctx.shadowColor='#ffd36a';circle(pr.x,pr.y,4,'#ffd36a');ctx.restore()}
  for(const e of enemies){if(e.dead)continue;circle(e.x,e.y,e.r+3,'#0005');circle(e.x,e.y,e.r,e.flash>0?'#fff':e.color);ctx.fillStyle='#2c1915';ctx.fillRect(e.x-4,e.y-5,3,3);ctx.fillRect(e.x+3,e.y-5,3,3);if(e.type==='brute'){ctx.fillStyle='#442326';ctx.fillRect(e.x-13,e.y-3,26,7)}if(e.type==='runner'){ctx.fillStyle='#c3a65a';ctx.fillRect(e.x-11,e.y+7,22,3)}ctx.fillStyle='#3d1111';ctx.fillRect(e.x-e.r,e.y-e.r-10,e.r*2,4);ctx.fillStyle='#d95949';ctx.fillRect(e.x-e.r,e.y-e.r-10,e.r*2*Math.max(0,e.hp/e.maxHp),4)}
  circle(player.x,player.y,player.r+8,'#ffffff0d');circle(player.x,player.y,player.r,'#b68a46');ctx.fillStyle='#f0d19a';ctx.fillRect(player.x-8,player.y-17,16,12);ctx.fillStyle='#4a2c13';ctx.fillRect(player.x-12,player.y-18,24,6);
@@ -311,7 +309,12 @@ canvas.addEventListener('pointerdown',e=>{if(state!=='play')return;if(buildMode)
 canvas.addEventListener('pointermove',e=>{if(e.pointerId===activePointer)moveJoy(e)});
 canvas.addEventListener('pointerup',e=>{if(e.pointerId===activePointer){activePointer=null;joyVec={x:0,y:0};stick.style.transform='translate(0,0)'}});
 function moveJoy(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,m=Math.hypot(dx,dy)||1,max=27;if(m>max){dx=dx/m*max;dy=dy/m*max}joyVec={x:dx/max,y:dy/max};stick.style.transform='translate('+dx+'px,'+dy+'px)'}
-$('#turretBtn').addEventListener('click',()=>{buildMode=buildMode==='turret'?null:'turret';$('#turretBtn').classList.toggle('active',buildMode==='turret');$('#fenceBtn').classList.remove('active');showToast(buildMode?'Tap the map to place a turret':'Build cancelled')});$('#fenceBtn').addEventListener('click',()=>{buildMode=buildMode==='fence'?null:'fence';$('#fenceBtn').classList.toggle('active',buildMode==='fence');$('#turretBtn').classList.remove('active');showToast(buildMode?'Tap the map to place a fence':'Build cancelled')});
+function chooseBuild(mode,id,msg){buildMode=buildMode===mode?null:mode;clearBuildButtons();if(buildMode)$(id).classList.add('active');showToast(buildMode?msg:'Build cancelled')}
+$('#turretBtn').addEventListener('click',()=>chooseBuild('turret','#turretBtn','Tap the map to place an arrow turret'));
+$('#fenceBtn').addEventListener('click',()=>chooseBuild('fence','#fenceBtn','Tap the map to place a fence'));
+$('#trapBtn').addEventListener('click',()=>chooseBuild('trap','#trapBtn','Tap the map to place spike traps'));
+$('#fireBtn').addEventListener('click',()=>chooseBuild('fire','#fireBtn','Tap the map to place a healing campfire'));
+$('#upgradeBuildBtn').addEventListener('click',()=>chooseBuild('upgrade','#upgradeBuildBtn','Tap an existing turret or fence to upgrade it'));
 play.addEventListener('click',()=>start(Math.min(save.unlocked,100)));
 reset.addEventListener('click',()=>{if(!confirm('Reset all progression, currency, weapon upgrades, and equipment?'))return;save=structuredClone(defaultSave);persist();updateHud();renderInventory();$('#menuSub').textContent='Progress reset. Cut trees, open chests, collect equipment, and build your weapon again.'});
 updateHud();buildStage();
