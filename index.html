@@ -279,6 +279,70 @@ function placeBuild(type,wx,wy){
  if(type==='fire')campfires.push({x:wx,y:wy,r:88,life:36});
  buildMode=null;clearBuildButtons();showToast(type==='turret'?'Arrow turret built':type==='fence'?'Fence built':type==='trap'?'Spike trap built':'Campfire built');updateHud()
 }
+function update(dt){
+ if(state!=='play')return;
+ for(const k of Object.keys(boosts))boosts[k]=Math.max(0,boosts[k]-dt);updateBoostHud();
+ let vx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vy=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);vx+=joyVec.x;vy+=joyVec.y;
+ let m=Math.hypot(vx,vy)||1;if(Math.hypot(vx,vy)>.05){vx/=m;vy/=m}else{vx=0;vy=0}
+ const moveMult=boosts.haste>0?1.38:1;
+ player.x=clamp(player.x+vx*player.speed*moveMult*dt,30,world.w-30);player.y=clamp(player.y+vy*player.speed*moveMult*dt,30,world.h-30);
+ player.spin+=dt*(5.8+save.weaponLevel*.015)*(boosts.frenzy>0?1.45:1);player.ifr=Math.max(0,player.ifr-dt);
+ for(const e of enemies){
+  if(e.dead)continue;e.hitCd=Math.max(0,e.hitCd-dt);e.flash=Math.max(0,e.flash-dt);
+  let target=defenseMode&&baseCore?baseCore:player,dx=target.x-e.x,dy=target.y-e.y,dm=Math.hypot(dx,dy)||1;
+  e.x+=dx/dm*e.speed*dt;e.y+=dy/dm*e.speed*dt;
+  let playerDist=Math.hypot(player.x-e.x,player.y-e.y);
+  if(playerDist<player.range+e.r)damageEnemy(e,player.damage*(boosts.frenzy>0?1.65:1));
+  for(const fence of fences){
+   if(fence.hp<=0)continue;
+   if(Math.abs(e.x-fence.x)<fence.w/2+e.r&&Math.abs(e.y-fence.y)<fence.h/2+e.r){
+    e.x-=dx/dm*e.speed*dt*2.2;fence.hp-=e.damage*dt*(.58-(fence.level-1)*.11)
+   }
+  }
+  if(defenseMode&&baseCore&&Math.hypot(e.x-baseCore.x,e.y-baseCore.y)<baseCore.r+e.r+4){
+   baseCore.hp-=e.damage*dt*1.8;if(baseCore.hp<=0)defeat()
+  }else if(playerDist<player.r+e.r+2&&player.ifr<=0){
+   let taken=Math.max(1,e.damage-player.armor-(boosts.shield>0?6:0));player.hp-=taken;
+   floaters.push({x:player.x,y:player.y-25,text:'-'+Math.round(taken),life:.6,color:'#ff7b74'});player.ifr=.48;if(player.hp<=0)defeat()
+  }
+ }
+ enemies=enemies.filter(e=>!e.dead);fences=fences.filter(f=>f.hp>0);
+ for(const turret of turrets){
+  turret.cd=Math.max(0,turret.cd-dt);let nearest=null,nd=turret.range;
+  for(const e of enemies){let dd=dist(turret,e);if(dd<nd){nd=dd;nearest=e}}
+  if(nearest&&turret.cd<=0){
+   let tier=turret.level||1;turret.cd=tier===1?.7:tier===2?.33:1.05;
+   let dx=nearest.x-turret.x,dy=nearest.y-turret.y,tm=Math.hypot(dx,dy)||1;
+   let dmg=tier===1?15+save.weaponLevel:tier===2?11+save.weaponLevel*.8:42+save.weaponLevel*1.5;
+   projectiles.push({x:turret.x,y:turret.y,vx:dx/tm*(tier===3?330:460),vy:dy/tm*(tier===3?330:460),damage:dmg,life:1.4,splash:tier===3?58:0,tier})
+  }
+ }
+ for(const pr of projectiles){
+  pr.x+=pr.vx*dt;pr.y+=pr.vy*dt;pr.life-=dt;
+  for(const e of enemies){if(!e.dead&&Math.hypot(pr.x-e.x,pr.y-e.y)<e.r+5){damageEnemy(e,pr.damage);if(pr.splash){for(const other of enemies)if(!other.dead&&other!==e&&Math.hypot(pr.x-other.x,pr.y-other.y)<pr.splash)damageEnemy(other,pr.damage*.55)}pr.life=0;break}}
+ }
+ projectiles=projectiles.filter(p=>p.life>0);
+ for(const trap of traps){
+  trap.cd=Math.max(0,trap.cd-dt);trap.life-=dt;
+  if(trap.cd<=0){let hit=false;for(const e of enemies){if(!e.dead&&dist(trap,e)<trap.r+e.r){damageEnemy(e,18+level*.45);hit=true}}if(hit)trap.cd=.72}
+ }
+ traps=traps.filter(t=>t.life>0);
+ for(const fire of campfires){fire.life-=dt;if(dist(player,fire)<fire.r)player.hp=Math.min(player.maxHp,player.hp+player.maxHp*.035*dt)}
+ campfires=campfires.filter(f=>f.life>0);
+ for(const t of trees){if(t.dead)continue;t.hitCd=Math.max(0,t.hitCd-dt);t.flash=Math.max(0,t.flash-dt);if(dist(player,t)<player.range+t.r*.55)damageTree(t,player.damage)}
+ trees=trees.filter(t=>!t.dead);
+ for(const d of drops){
+  let dd=dist(player,d),pickup=player.pickup*(boosts.magnet>0?2.4:1);
+  if(dd<pickup){d.x+=(player.x-d.x)*dt*(boosts.magnet>0?10:6);d.y+=(player.y-d.y)*dt*(boosts.magnet>0?10:6)}
+  if(dd<24){if(d.type==='gold')save.gold+=d.amount;if(d.type==='wood')save.wood+=d.amount;if(d.type==='gem')save.gems+=d.amount;if(d.type==='boost')applyBoost(d.boost);d.dead=true;persist()}
+ }
+ drops=drops.filter(d=>!d.dead);
+ for(const c of chests)if(!c.open&&dist(player,c)<30)openChest(c);
+ interactStations();
+ for(const fl of floaters){fl.y-=25*dt;fl.life-=dt}floaters=floaters.filter(fl=>fl.life>0);
+ for(const p of particles)p.life-=dt;particles=particles.filter(p=>p.life>0);
+ cam.x+=(clamp(player.x-W/2,0,world.w-W)-cam.x)*Math.min(1,dt*7);cam.y+=(clamp(player.y-H/2,0,world.h-H)-cam.y)*Math.min(1,dt*7);updateHud()
+}
 function circle(x,y,r,fill){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill()}
 function drawTree(t){
  ctx.save();ctx.translate(t.x,t.y);if(t.flash>0)ctx.globalAlpha=.6;ctx.fillStyle='#6b4425';ctx.fillRect(-5,8,10,25);circle(0,0,t.r,'#285f36');circle(-12,4,t.r*.63,'#347542');circle(11,3,t.r*.57,'#2d6b3d');ctx.globalAlpha=1;
