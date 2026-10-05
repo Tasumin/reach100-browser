@@ -17,7 +17,7 @@ canvas{width:100%;height:100%;display:block}
 .objTitle{background:#8f2330;padding:7px 12px;border-radius:4px;font-size:12px;font-weight:950;box-shadow:0 4px 10px #0005}
 .objSub{margin-top:4px;font-size:10px;font-weight:800;color:#eee}.progress{height:5px;background:#0007;border-radius:99px;margin-top:5px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:#f0b94d}
 .level{position:absolute;right:13px;top:82px;background:#26170d;border:2px solid #9f6f30;border-radius:50%;width:47px;height:47px;display:grid;place-items:center;font-size:10px;font-weight:900;line-height:1;text-align:center}
-#gearBtn{position:absolute;right:12px;top:138px;pointer-events:auto;width:48px;height:48px;border-radius:50%;border:2px solid #7c6339;background:#20180e;color:white;font-size:21px;padding:0}
+#gearBtn{position:absolute;right:12px;top:138px;pointer-events:auto;width:54px;height:54px;border-radius:50%;border:2px solid #7c6339;background:#20180e;color:white;font-size:23px;padding:0;z-index:20;cursor:pointer;display:grid;place-items:center}
 #weaponHud{position:absolute;right:10px;top:194px;background:#08130dcc;border:1px solid #ffffff1d;border-radius:10px;padding:6px 8px;font-size:10px;font-weight:850;text-align:right}
 #msg{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);font-size:32px;font-weight:1000;text-shadow:0 4px 10px #000;opacity:0;transition:.2s;text-align:center}
 .toast{position:absolute;left:50%;bottom:155px;transform:translateX(-50%);background:#0a160fe8;border:1px solid #ffffff26;border-radius:12px;padding:9px 13px;font-size:12px;font-weight:850;opacity:0;transition:.2s;white-space:nowrap}
@@ -55,7 +55,7 @@ button{border:0;border-radius:14px;padding:13px 14px;font-weight:900;font-size:1
     <div style="width:54px"></div>
   </div>
   <div class="level" id="levelBadge">LV<br>1</div>
-  <button id="gearBtn" aria-label="Equipment">🎒</button>
+  <button id="gearBtn" type="button" aria-label="Open equipment">🎒</button>
   <div id="weaponHud">Weapon Lv. <span id="weaponLevel">1</span><br><span id="gearPower">Power 0</span></div>
   <div id="msg">LEVEL CLEAR</div>
   <div class="toast" id="toast"></div>
@@ -375,7 +375,9 @@ function renderInventory(){
 document.querySelectorAll('#gearFilters .gearFilter').forEach(b=>b.addEventListener('click',()=>{gearFilter=b.dataset.filter;selectedGearId=null;renderInventory()}));
 function closeModals(){upgradeCard.style.display='none';forgeCard.style.display='none';inventoryCard.style.display='none'}
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{document.getElementById(b.dataset.close).style.display='none';if(state==='upgrade'||state==='forge'||state==='inventory')state='play'}));
-$('#gearBtn').addEventListener('click',()=>{renderInventory();inventoryCard.style.display='block';if(state==='play')state='inventory'});
+function openInventory(){renderInventory();inventoryCard.style.display='block';inventoryCard.style.zIndex='50';if(state==='play')state='inventory'}
+$('#gearBtn').addEventListener('pointerdown',e=>{e.stopPropagation()});
+$('#gearBtn').addEventListener('click',e=>{e.stopPropagation();openInventory()});
 $('#equipmentMenu').addEventListener('click',()=>{renderInventory();inventoryCard.style.display='block';state='menu'});
 function applyBoost(type){if(type==='heal'){player.hp=Math.min(player.maxHp,player.hp+player.maxHp*.35);showToast('Healing boost +35% HP');return}boosts[type]=Math.max(boosts[type]||0,type==='shield'?10:12);showToast(type.toUpperCase()+' boost!')}
 function updateBoostHud(){const box=$('#boosts');box.innerHTML='';for(const [k,v] of Object.entries(boosts)){if(v>0){const d=document.createElement('div');d.className='boostChip';d.innerHTML='<strong>'+k.toUpperCase()+'</strong> '+v.toFixed(1)+'s';box.appendChild(d)}}}
