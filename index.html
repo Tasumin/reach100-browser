@@ -3,30 +3,37 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>100 Level Hunt</title>
+<title>Reach 100</title>
 <style>
 html,body{margin:0;height:100%;overflow:hidden;background:#07130d;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;touch-action:none}
 *{box-sizing:border-box}body{display:grid;place-items:center}
 #wrap{position:relative;width:min(100vw,520px);height:100vh;max-height:940px;background:#0d1c13;overflow:hidden}
 canvas{width:100%;height:100%;display:block}
 #hud{position:absolute;inset:0;pointer-events:none}
-.top{position:absolute;left:12px;right:12px;top:max(12px,env(safe-area-inset-top));display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
-.stats{display:grid;gap:4px;font-weight:800;font-size:13px;text-shadow:0 2px 4px #000}
-.stat{display:flex;align-items:center;gap:7px}.ico{width:16px;text-align:center}
-.objective{position:absolute;left:50%;transform:translateX(-50%);top:max(14px,env(safe-area-inset-top));width:190px;text-align:center}
-.objTitle{background:#8f2330;padding:8px 14px;border-radius:3px;font-size:12px;font-weight:900;box-shadow:0 4px 10px #0005}
-.objSub{margin-top:5px;font-size:10px;font-weight:800;color:#ddd}.checks{margin-top:3px;display:flex;justify-content:center;gap:5px}.check{width:22px;height:20px;border-radius:4px;background:#326d35;border:1px solid #72c26f;display:grid;place-items:center;font-weight:1000}
-.level{position:absolute;right:14px;top:90px;background:#26170d;border:2px solid #9f6f30;border-radius:50%;width:46px;height:46px;display:grid;place-items:center;font-size:10px;font-weight:900;line-height:1;text-align:center}
-#msg{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);font-size:32px;font-weight:1000;text-shadow:0 4px 10px #000;opacity:0;transition:.2s}
-#overlay{position:absolute;inset:0;background:#06100bdb;display:grid;place-items:center;padding:26px;z-index:5}
-.panel{width:100%;max-width:390px;background:linear-gradient(180deg,#1b2e22,#0e1c14);border:1px solid #ffffff20;border-radius:26px;padding:24px;text-align:center;box-shadow:0 30px 90px #000b}
-.eyebrow{font-size:11px;letter-spacing:.2em;color:#77e69a;font-weight:900}.title{font-size:44px;line-height:.95;font-weight:1000;margin:8px 0 12px}.sub{color:#b2c1b6;line-height:1.5;font-size:14px}
-button{border:0;border-radius:15px;padding:14px 16px;font-weight:900;font-size:15px;cursor:pointer}.primary{width:100%;background:linear-gradient(135deg,#ffd468,#f39f43);color:#2b1705;margin-top:16px}.secondary{width:100%;margin-top:9px;background:#ffffff10;color:white;border:1px solid #ffffff1d}
-#upgradeCard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88%,360px);background:#102016f2;border:1px solid #ffffff25;border-radius:22px;padding:18px;display:none;z-index:4;box-shadow:0 25px 80px #000c}
-#upgradeCard h3{margin:0 0 6px;text-align:center}.upgrades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.up{background:#ffffff0c;border:1px solid #ffffff18;border-radius:14px;padding:12px 8px;text-align:center;font-size:12px;font-weight:800}.up b{display:block;font-size:22px;margin-bottom:5px}
-#joy{position:absolute;left:34px;bottom:max(28px,env(safe-area-inset-bottom));width:92px;height:92px;border-radius:50%;background:#ffffff12;border:2px solid #ffffff12;pointer-events:none}
-#stick{position:absolute;width:38px;height:38px;border-radius:50%;background:#ffffff25;left:25px;top:25px;border:1px solid #ffffff2a}
-#skill{position:absolute;right:22px;bottom:max(36px,env(safe-area-inset-bottom));width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#7b4b18,#2b1709);border:3px solid #c38b3e;display:grid;place-items:center;font-size:11px;font-weight:900;pointer-events:none}
+.top{position:absolute;left:10px;right:10px;top:max(10px,env(safe-area-inset-top));display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.stats{display:grid;gap:3px;font-weight:850;font-size:12px;text-shadow:0 2px 4px #000}
+.stat{display:flex;align-items:center;gap:5px}.ico{width:16px;text-align:center}
+.objective{position:absolute;left:50%;transform:translateX(-50%);top:max(10px,env(safe-area-inset-top));width:185px;text-align:center}
+.objTitle{background:#8f2330;padding:7px 12px;border-radius:4px;font-size:12px;font-weight:950;box-shadow:0 4px 10px #0005}
+.objSub{margin-top:4px;font-size:10px;font-weight:800;color:#eee}.progress{height:5px;background:#0007;border-radius:99px;margin-top:5px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:#f0b94d}
+.level{position:absolute;right:13px;top:82px;background:#26170d;border:2px solid #9f6f30;border-radius:50%;width:47px;height:47px;display:grid;place-items:center;font-size:10px;font-weight:900;line-height:1;text-align:center}
+#gearBtn{position:absolute;right:12px;top:138px;pointer-events:auto;width:48px;height:48px;border-radius:50%;border:2px solid #7c6339;background:#20180e;color:white;font-size:21px;padding:0}
+#weaponHud{position:absolute;right:10px;top:194px;background:#08130dcc;border:1px solid #ffffff1d;border-radius:10px;padding:6px 8px;font-size:10px;font-weight:850;text-align:right}
+#msg{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);font-size:32px;font-weight:1000;text-shadow:0 4px 10px #000;opacity:0;transition:.2s;text-align:center}
+.toast{position:absolute;left:50%;bottom:155px;transform:translateX(-50%);background:#0a160fe8;border:1px solid #ffffff26;border-radius:12px;padding:9px 13px;font-size:12px;font-weight:850;opacity:0;transition:.2s;white-space:nowrap}
+#overlay{position:absolute;inset:0;background:#06100be8;display:grid;place-items:center;padding:26px;z-index:8}
+.panel{width:100%;max-width:390px;background:linear-gradient(180deg,#1b2e22,#0e1c14);border:1px solid #ffffff20;border-radius:26px;padding:23px;text-align:center;box-shadow:0 30px 90px #000b}
+.eyebrow{font-size:11px;letter-spacing:.2em;color:#77e69a;font-weight:900}.title{font-size:44px;line-height:.95;font-weight:1000;margin:8px 0 12px}.sub{color:#b2c1b6;line-height:1.45;font-size:14px}
+button{border:0;border-radius:14px;padding:13px 14px;font-weight:900;font-size:14px;cursor:pointer}.primary{width:100%;background:linear-gradient(135deg,#ffd468,#f39f43);color:#2b1705;margin-top:15px}.secondary{width:100%;margin-top:8px;background:#ffffff10;color:white;border:1px solid #ffffff1d}
+.modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92%,390px);max-height:78%;overflow:auto;background:#0e1e15f7;border:1px solid #ffffff26;border-radius:22px;padding:18px;display:none;z-index:7;box-shadow:0 25px 80px #000c;pointer-events:auto}
+.modal h3{margin:0 0 5px;text-align:center}.modal .close{position:absolute;right:9px;top:9px;width:34px;height:34px;padding:0;background:#ffffff12;color:white}
+.upgrades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.up{background:#ffffff0c;border:1px solid #ffffff18;border-radius:14px;padding:11px 7px;text-align:center;font-size:11px;font-weight:800;color:#fff}.up b{display:block;font-size:22px;margin-bottom:4px}
+.forgeLine{background:#ffffff09;border:1px solid #ffffff15;border-radius:13px;padding:12px;margin-top:12px}.forgeStats{display:flex;justify-content:space-between;font-size:12px;margin:5px 0}.cost{font-size:12px;color:#ffd468;font-weight:800}
+#inventoryList{display:grid;gap:8px;margin-top:12px}.item{display:grid;grid-template-columns:42px 1fr auto;gap:9px;align-items:center;text-align:left;background:#ffffff09;border:1px solid #ffffff15;border-radius:12px;padding:9px}.itemIcon{font-size:24px}.itemName{font-weight:900;font-size:12px}.itemStat{font-size:10px;color:#b9c5bc}.equip{padding:8px 10px;font-size:11px;background:#6f8f48;color:white}.equipped{background:#2e6b43}
+#joy{position:absolute;left:32px;bottom:max(28px,env(safe-area-inset-bottom));width:94px;height:94px;border-radius:50%;background:#ffffff10;border:2px solid #ffffff12;pointer-events:none}
+#stick{position:absolute;width:38px;height:38px;border-radius:50%;background:#ffffff29;left:26px;top:26px;border:1px solid #ffffff2a}
+#skill{position:absolute;right:22px;bottom:max(36px,env(safe-area-inset-bottom));width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#7b4b18,#2b1709);border:3px solid #c38b3e;display:grid;place-items:center;font-size:10px;font-weight:900;pointer-events:none;text-align:center}
+.rCommon{color:#ddd}.rUncommon{color:#76df8c}.rRare{color:#65aaff}.rEpic{color:#cb7cff}.rLegendary{color:#ffbf47}
 </style>
 </head>
 <body>
@@ -35,115 +42,267 @@ button{border:0;border-radius:15px;padding:14px 16px;font-weight:900;font-size:1
 <div id="hud">
   <div class="top">
     <div class="stats">
-      <div class="stat"><span class="ico">🪙</span><span id="coins">0</span></div>
+      <div class="stat"><span class="ico">🪙</span><span id="gold">0</span></div>
+      <div class="stat"><span class="ico">🪵</span><span id="wood">0</span></div>
       <div class="stat"><span class="ico">💎</span><span id="gems">0</span></div>
       <div class="stat"><span class="ico">📦</span><span id="chests">0</span></div>
-      <div class="stat"><span class="ico">💀</span><span id="kills">0</span></div>
     </div>
     <div class="objective">
       <div class="objTitle">Kill Them All</div>
-      <div class="objSub">Stage Treasures</div>
-      <div class="checks"><div class="check" id="c1">✓</div><div class="check" id="c2">✓</div><div class="check" id="c3">✓</div></div>
+      <div class="objSub"><span id="killText">0 / 0</span> enemies</div>
+      <div class="progress"><i id="killBar"></i></div>
     </div>
     <div style="width:54px"></div>
   </div>
   <div class="level" id="levelBadge">LV<br>1</div>
+  <button id="gearBtn" aria-label="Equipment">🎒</button>
+  <div id="weaponHud">Weapon Lv. <span id="weaponLevel">1</span><br><span id="gearPower">Power 0</span></div>
   <div id="msg">LEVEL CLEAR</div>
+  <div class="toast" id="toast"></div>
   <div id="joy"><div id="stick"></div></div>
-  <div id="skill">SKILL</div>
+  <div id="skill">AUTO<br>ATTACK</div>
 </div>
-<div id="upgradeCard">
-  <h3>Choose Upgrade</h3>
-  <div class="sub" style="text-align:center;margin-bottom:12px">Pick one and keep fighting.</div>
+
+<div class="modal" id="upgradeCard">
+  <button class="close" data-close="upgradeCard">×</button>
+  <h3>Level Upgrade</h3>
+  <div class="sub" style="text-align:center">Choose a temporary boost for this stage.</div>
   <div class="upgrades">
     <button class="up" data-up="damage"><b>⚔️</b>Damage +25%</button>
-    <button class="up" data-up="range"><b>🌀</b>Blade Range +20%</button>
-    <button class="up" data-up="speed"><b>👟</b>Move Speed +15%</button>
+    <button class="up" data-up="range"><b>🌀</b>Range +20%</button>
+    <button class="up" data-up="speed"><b>👟</b>Speed +15%</button>
   </div>
 </div>
+
+<div class="modal" id="forgeCard">
+  <button class="close" data-close="forgeCard">×</button>
+  <h3>Blacksmith</h3>
+  <div class="sub" style="text-align:center">Permanent weapon upgrades use gold and wood.</div>
+  <div class="forgeLine">
+    <div class="forgeStats"><span>Current weapon</span><b id="forgeLevel">Lv. 1</b></div>
+    <div class="forgeStats"><span>Base damage</span><b id="forgeDamage">26</b></div>
+    <div class="forgeStats"><span>Attack radius</span><b id="forgeRange">78</b></div>
+    <div class="cost" id="forgeCost"></div>
+    <button class="primary" id="forgeUpgrade">UPGRADE WEAPON</button>
+  </div>
+</div>
+
+<div class="modal" id="inventoryCard">
+  <button class="close" data-close="inventoryCard">×</button>
+  <h3>Equipment</h3>
+  <div class="sub" style="text-align:center">Gear found in chests is permanent.</div>
+  <div id="inventoryList"></div>
+</div>
+
 <div id="overlay">
   <div class="panel">
-    <div class="eyebrow">TOP-DOWN SURVIVAL</div>
+    <div class="eyebrow">SURVIVE • LOOT • UPGRADE</div>
     <div class="title">REACH<br><span style="color:#ffd468">LEVEL 100</span></div>
-    <div class="sub">Move with the joystick or WASD. Your spinning weapon attacks automatically. Clear enemies, grab rewards, and upgrade as stages get harder.</div>
+    <div class="sub" id="menuSub">Cut trees, collect gold and wood, open chests, find equipment, improve your weapon, and survive increasingly dangerous mobs.</div>
     <button class="primary" id="play">PLAY LEVEL 1</button>
+    <button class="secondary" id="equipmentMenu">EQUIPMENT</button>
     <button class="secondary" id="reset">RESET PROGRESS</button>
   </div>
 </div>
 </div>
+
 <script>
 (()=> {
-const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
-const ov=document.getElementById('overlay'),play=document.getElementById('play'),reset=document.getElementById('reset');
-const joy=document.getElementById('joy'),stick=document.getElementById('stick'),upgradeCard=document.getElementById('upgradeCard');
-const el={coins:document.getElementById('coins'),gems:document.getElementById('gems'),chests:document.getElementById('chests'),kills:document.getElementById('kills'),lvl:document.getElementById('levelBadge'),msg:document.getElementById('msg')};
-let W=390,H=844,dpr=1,last=0,state='menu',level=1,unlocked=+localStorage.getItem('huntUnlocked')||1;
-let player,enemies=[],drops=[],crates=[],trees=[],upgradePads=[],floaters=[],particles=[],cam={x:0,y:0},keys={},joyVec={x:0,y:0},activePointer=null;
-let stats={coins:0,gems:0,chests:0,kills:0}; let stageKills=0,targetKills=0,upgradesTaken=0;
-const world={w:1800,h:1800};
+const $=s=>document.querySelector(s), canvas=$('#game'),ctx=canvas.getContext('2d');
+const ov=$('#overlay'),play=$('#play'),reset=$('#reset'),joy=$('#joy'),stick=$('#stick');
+const upgradeCard=$('#upgradeCard'),forgeCard=$('#forgeCard'),inventoryCard=$('#inventoryCard'),toast=$('#toast');
+const el={gold:$('#gold'),wood:$('#wood'),gems:$('#gems'),chests:$('#chests'),lvl:$('#levelBadge'),msg:$('#msg'),killText:$('#killText'),killBar:$('#killBar'),weaponLevel:$('#weaponLevel'),gearPower:$('#gearPower')};
+let W=390,H=844,dpr=1,last=0,state='menu',level=1;
+const SAVE='reach100SaveV2';
+const defaultSave={unlocked:1,gold:0,wood:0,gems:0,chests:0,totalKills:0,weaponLevel:1,inventory:[],equipped:{weapon:null,armor:null,boots:null,charm:null}};
+let save=loadSave();
+let player,enemies=[],drops=[],chests=[],trees=[],upgradePads=[],forge=null,floaters=[],particles=[],cam={x:0,y:0},keys={},joyVec={x:0,y:0},activePointer=null;
+let stageKills=0,targetKills=0,spawnedKills=0,stageTreeCuts=0,stageChests=0;
+const world={w:1900,h:1900};
+const rarityTable=[
+ {name:'Common',cls:'rCommon',mult:1,color:'#ddd',weight:52},
+ {name:'Uncommon',cls:'rUncommon',mult:1.3,color:'#76df8c',weight:27},
+ {name:'Rare',cls:'rRare',mult:1.7,color:'#65aaff',weight:14},
+ {name:'Epic',cls:'rEpic',mult:2.25,color:'#cb7cff',weight:6},
+ {name:'Legendary',cls:'rLegendary',mult:3.1,color:'#ffbf47',weight:1}
+];
+const gearDefs={
+ weapon:[['Iron Axe','🪓','damage'],['Long Sword','🗡️','damage'],['War Hammer','🔨','damage']],
+ armor:[['Hide Armor','🥋','armor'],['Knight Armor','🛡️','armor'],['Scale Mail','🦺','maxHp']],
+ boots:[['Trail Boots','🥾','speed'],['Swift Boots','👢','speed']],
+ charm:[['Hunter Charm','📿','pickup'],['Vital Charm','❤️','maxHp'],['Power Charm','🔥','damage']]
+};
+function loadSave(){try{return Object.assign(structuredClone(defaultSave),JSON.parse(localStorage.getItem(SAVE)||'{}'))}catch{return structuredClone(defaultSave)}}
+function persist(){localStorage.setItem(SAVE,JSON.stringify(save))}
 function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);canvas.width=r.width*dpr;canvas.height=r.height*dpr;W=r.width;H=r.height;ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),rand=(a,b)=>a+Math.random()*(b-a),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
-function start(n){level=clamp(n,1,100);ov.style.display='none';state='play';buildStage();updateHud()}
-function buildStage(){
- enemies=[];drops=[];crates=[];trees=[];upgradePads=[];floaters=[];particles=[];stageKills=0;upgradesTaken=0;
- player={x:world.w/2,y:world.h/2,r:18,hp:100,maxHp:100,speed:175,damage:26,range:78,spin:0,ifr:0};
- targetKills=18+Math.floor(level*1.8);
- for(let i=0;i<45;i++)trees.push({x:rand(80,world.w-80),y:rand(80,world.h-80),r:rand(18,32)});
- for(let i=0;i<12;i++)crates.push({x:rand(100,world.w-100),y:rand(100,world.h-100),open:false});
- for(let i=0;i<3;i++)upgradePads.push({x:rand(180,world.w-180),y:rand(180,world.h-180),used:false});
- spawnWave(Math.min(targetKills,12));
+function gearBonuses(){
+ let b={damage:0,armor:0,maxHp:0,speed:0,pickup:0,power:0};
+ for(const slot of Object.keys(save.equipped)){const id=save.equipped[slot],it=save.inventory.find(x=>x.id===id);if(it){b[it.stat]+=it.value;b.power+=it.power}}
+ return b
 }
-function spawnWave(n){for(let i=0;i<n;i++){let a=Math.random()*Math.PI*2,r=rand(300,650);let x=clamp(player.x+Math.cos(a)*r,40,world.w-40),y=clamp(player.y+Math.sin(a)*r,40,world.h-40);let tier=1+Math.floor((level-1)/20);enemies.push({x,y,r:16,hp:40+level*4+tier*12,maxHp:40+level*4+tier*12,speed:45+level*.55+rand(0,15),hitCd:0,flash:0})}}
-function updateHud(){el.coins.textContent=stats.coins;el.gems.textContent=stats.gems;el.chests.textContent=stats.chests;el.kills.textContent=stats.kills;el.lvl.innerHTML='LV<br>'+level;play.textContent='PLAY LEVEL '+Math.min(unlocked,100)}
-function dropLoot(e){if(Math.random()<.9)drops.push({x:e.x,y:e.y,type:'coin',v:rand(0,Math.PI*2)});if(Math.random()<.11)drops.push({x:e.x+10,y:e.y,type:'gem',v:0})}
-function damageEnemy(e,amt){if(e.hitCd>0)return;e.hitCd=.22;e.hp-=amt;e.flash=.08;floaters.push({x:e.x,y:e.y-20,text:Math.round(amt),life:.6});if(e.hp<=0){stageKills++;stats.kills++;dropLoot(e);e.dead=true;if(stageKills<targetKills&&enemies.filter(v=>!v.dead).length<7)spawnWave(Math.min(6,targetKills-stageKills));if(stageKills>=targetKills)clearStage()}}
-function clearStage(){state='clear';el.msg.style.opacity=1;setTimeout(()=>{el.msg.style.opacity=0;if(level===unlocked&&unlocked<101){unlocked=level+1;localStorage.setItem('huntUnlocked',unlocked)}if(level>=100){showEnd()}else start(level+1)},900)}
-function showEnd(){state='menu';ov.style.display='grid';ov.querySelector('.title').innerHTML='YOU<br><span style="color:#77e69a">MADE IT</span>';ov.querySelector('.sub').textContent='All 100 levels cleared.';play.textContent='PLAY AGAIN';play.onclick=()=>start(1)}
-function defeat(){state='dead';setTimeout(()=>{ov.style.display='grid';ov.querySelector('.title').innerHTML='<span style="color:#e85b63">DEFEATED</span>';ov.querySelector('.sub').innerHTML='Rewards collected: <b>'+stats.coins+' coins</b>, <b>'+stats.gems+' gems</b>, <b>'+stats.chests+' chests</b>.';play.textContent='RETRY LEVEL '+level;play.onclick=()=>start(level)},350)}
-function chooseUpgrade(type){if(type==='damage')player.damage*=1.25;if(type==='range')player.range*=1.2;if(type==='speed')player.speed*=1.15;upgradeCard.style.display='none';state='play'}
-upgradeCard.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>chooseUpgrade(b.dataset.up));
-function interactPads(){for(const u of upgradePads){if(!u.used&&dist(player,u)<46){u.used=true;upgradesTaken++;state='upgrade';upgradeCard.style.display='block';break}}}
+function weaponBase(){const lv=save.weaponLevel;return {damage:24+(lv-1)*4.5,range:76+Math.min(28,(lv-1)*1.4)}}
+function weaponCost(){const lv=save.weaponLevel;return {gold:70+lv*45+Math.floor(lv*lv*3),wood:10+lv*5}}
+function start(n){level=clamp(n,1,100);ov.style.display='none';closeModals();state='play';buildStage();updateHud()}
+function buildStage(){
+ enemies=[];drops=[];chests=[];trees=[];upgradePads=[];floaters=[];particles=[];stageKills=0;spawnedKills=0;stageTreeCuts=0;stageChests=0;
+ const gb=gearBonuses(),wb=weaponBase();
+ player={x:world.w/2,y:world.h/2,r:18,maxHp:100+gb.maxHp,hp:100+gb.maxHp,speed:168+gb.speed,damage:wb.damage+gb.damage,range:wb.range,pickup:120+gb.pickup,armor:gb.armor,spin:0,ifr:0};
+ targetKills=14+Math.floor(level*1.55);
+ const treeCount=34+Math.min(30,Math.floor(level*.4));
+ for(let i=0;i<treeCount;i++){let hp=32+Math.floor(level*.22);trees.push({x:rand(80,world.w-80),y:rand(80,world.h-80),r:rand(20,29),hp,maxHp:hp,hitCd:0,flash:0,dead:false})}
+ const chestCount=4+Math.floor(level/20);
+ for(let i=0;i<chestCount;i++)chests.push({x:rand(100,world.w-100),y:rand(100,world.h-100),open:false});
+ for(let i=0;i<2+Math.floor(level/35);i++)upgradePads.push({x:rand(180,world.w-180),y:rand(180,world.h-180),used:false});
+ forge={x:clamp(player.x+rand(-360,360),180,world.w-180),y:clamp(player.y+rand(-360,360),180,world.h-180),used:false};
+ spawnWave(Math.min(targetKills,10+Math.floor(level/12)));
+}
+function enemyStats(type){
+ const hpScale=1+(level-1)*0.047;
+ const dmgScale=1+(level-1)*0.031;
+ const speedScale=1+Math.min(.38,(level-1)*.0042);
+ let base={r:16,hp:42,speed:46,damage:8,color:'#744235',gold:8};
+ if(type==='runner')base={r:13,hp:31,speed:76,damage:7,color:'#856a38',gold:9};
+ if(type==='brute')base={r:22,hp:92,speed:31,damage:14,color:'#66383a',gold:15};
+ return {...base,hp:base.hp*hpScale,speed:base.speed*speedScale,damage:base.damage*dmgScale}
+}
+function chooseEnemyType(){
+ const r=Math.random();
+ if(level>=15&&r<Math.min(.28,.08+level*.002))return 'brute';
+ if(level>=7&&r<Math.min(.58,.25+level*.003))return 'runner';
+ return 'grunt'
+}
+function spawnWave(n){
+ n=Math.min(n,targetKills-spawnedKills); if(n<=0)return;
+ for(let i=0;i<n;i++){
+  let a=Math.random()*Math.PI*2,r=rand(340,650),type=chooseEnemyType(),s=enemyStats(type);
+  let ex=clamp(player.x+Math.cos(a)*r,40,world.w-40),ey=clamp(player.y+Math.sin(a)*r,40,world.h-40);
+  enemies.push({x:ex,y:ey,type,r:s.r,hp:s.hp,maxHp:s.hp,speed:s.speed,damage:s.damage,color:s.color,gold:s.gold,hitCd:0,flash:0});
+  spawnedKills++;
+ }
+}
+function updateHud(){
+ el.gold.textContent=save.gold;el.wood.textContent=save.wood;el.gems.textContent=save.gems;el.chests.textContent=save.chests;
+ el.lvl.innerHTML='LV<br>'+level;el.weaponLevel.textContent=save.weaponLevel;el.gearPower.textContent='Power '+Math.round(gearBonuses().power);
+ el.killText.textContent=stageKills+' / '+targetKills;el.killBar.style.width=(stageKills/Math.max(1,targetKills)*100)+'%';
+ if(state==='menu')play.textContent='PLAY LEVEL '+Math.min(save.unlocked,100)
+}
+function showToast(text){toast.textContent=text;toast.style.opacity=1;clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.style.opacity=0,1500)}
+function dropLoot(e){
+ const gold=Math.max(2,Math.round(e.gold*(.8+Math.random()*.5)));drops.push({x:e.x,y:e.y,type:'gold',amount:gold});
+ if(Math.random()<.045+level*.0004)drops.push({x:e.x+9,y:e.y,type:'gem',amount:1})
+}
+function damageEnemy(e,amt){
+ if(e.hitCd>0)return;e.hitCd=.19;e.hp-=amt;e.flash=.08;floaters.push({x:e.x,y:e.y-20,text:Math.round(amt),life:.58,color:'#fff'});
+ if(e.hp<=0){stageKills++;save.totalKills++;dropLoot(e);e.dead=true;persist();if(stageKills<targetKills&&enemies.filter(v=>!v.dead).length<6)spawnWave(Math.min(5+Math.floor(level/20),targetKills-stageKills));if(stageKills>=targetKills)clearStage()}
+}
+function damageTree(t,amt){
+ if(t.hitCd>0||t.dead)return;t.hitCd=.28;t.hp-=amt*.65;t.flash=.1;floaters.push({x:t.x,y:t.y-30,text:Math.round(amt*.65),life:.5,color:'#d8f3cf'});
+ if(t.hp<=0){t.dead=true;stageTreeCuts++;let wood=2+Math.floor(Math.random()*4)+Math.floor(level/30);drops.push({x:t.x-6,y:t.y,type:'wood',amount:wood});if(Math.random()<.36)drops.push({x:t.x+9,y:t.y,type:'gold',amount:4+Math.floor(level/8)});showToast('Tree cut: +wood')}
+}
+function clearStage(){
+ if(state!=='play')return;state='clear';el.msg.textContent='LEVEL CLEAR';el.msg.style.opacity=1;
+ const clearGold=20+level*3;save.gold+=clearGold;if(level===save.unlocked&&save.unlocked<101)save.unlocked=level+1;persist();updateHud();
+ setTimeout(()=>{el.msg.style.opacity=0;if(level>=100)showEnd();else start(level+1)},1100)
+}
+function showEnd(){state='menu';ov.style.display='grid';ov.querySelector('.title').innerHTML='YOU<br><span style="color:#77e69a">MADE IT</span>';$('#menuSub').textContent='All 100 levels cleared. Keep upgrading your equipment and weapon to improve your build.';play.textContent='PLAY AGAIN';play.onclick=()=>start(1)}
+function defeat(){
+ if(state!=='play')return;state='dead';persist();
+ setTimeout(()=>{ov.style.display='grid';ov.querySelector('.title').innerHTML='<span style="color:#e85b63">DEFEATED</span>';$('#menuSub').innerHTML='You keep your loot and equipment. Gold: <b>'+save.gold+'</b> · Wood: <b>'+save.wood+'</b> · Gear power: <b>'+Math.round(gearBonuses().power)+'</b>';play.textContent='RETRY LEVEL '+level;play.onclick=()=>start(level)},300)
+}
+function chooseUpgrade(type){if(type==='damage')player.damage*=1.25;if(type==='range')player.range*=1.2;if(type==='speed')player.speed*=1.15;upgradeCard.style.display='none';state='play';showToast('Temporary '+type+' upgrade applied')}
+upgradeCard.querySelectorAll('[data-up]').forEach(b=>b.addEventListener('click',()=>chooseUpgrade(b.dataset.up)));
+function rollRarity(){
+ let total=rarityTable.reduce((a,r)=>a+r.weight,0),v=Math.random()*total;
+ for(const r of rarityTable){v-=r.weight;if(v<=0)return r}return rarityTable[0]
+}
+function rollGear(){
+ const slots=Object.keys(gearDefs),slot=slots[Math.floor(Math.random()*slots.length)],defs=gearDefs[slot],def=defs[Math.floor(Math.random()*defs.length)],rar=rollRarity();
+ const levelFactor=1+level*.035;let base=def[2]==='damage'?4:def[2]==='armor'?3:def[2]==='maxHp'?14:def[2]==='speed'?7:18;
+ const value=Math.round(base*rar.mult*levelFactor*10)/10,power=Math.round(value*(def[2]==='maxHp'?1:def[2]==='pickup'?.8:2));
+ return {id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),slot,name:def[0],icon:def[1],stat:def[2],value,rarity:rar.name,cls:rar.cls,power}
+}
+function maybeGearFromChest(){
+ const chance=Math.min(.9,.48+level*.004);
+ if(Math.random()>chance)return null;
+ let item=rollGear();save.inventory.push(item);
+ const current=save.inventory.find(x=>x.id===save.equipped[item.slot]);
+ if(!current||item.power>current.power){save.equipped[item.slot]=item.id;showToast(item.rarity+' '+item.name+' equipped!')}else showToast(item.rarity+' '+item.name+' found');
+ persist();return item
+}
+function openChest(c){
+ if(c.open)return;c.open=true;stageChests++;save.chests++;let gold=35+Math.floor(level*2.2)+Math.floor(Math.random()*40);save.gold+=gold;
+ if(Math.random()<.16)save.gems++;maybeGearFromChest();persist();updateHud();particles.push({x:c.x,y:c.y,life:.8});showToast('Chest opened: +'+gold+' gold')
+}
+function interactStations(){
+ for(const u of upgradePads){if(!u.used&&dist(player,u)<43){u.used=true;state='upgrade';upgradeCard.style.display='block';return}}
+ if(forge&&dist(player,forge)<48&&state==='play'){state='forge';openForge()}
+}
+function openForge(){updateForge();forgeCard.style.display='block'}
+function updateForge(){
+ const wb=weaponBase(),cost=weaponCost();$('#forgeLevel').textContent='Lv. '+save.weaponLevel;$('#forgeDamage').textContent=wb.damage.toFixed(1);$('#forgeRange').textContent=Math.round(wb.range);
+ $('#forgeCost').textContent='Cost: '+cost.gold+' gold + '+cost.wood+' wood';$('#forgeUpgrade').disabled=save.gold<cost.gold||save.wood<cost.wood;$('#forgeUpgrade').style.opacity=$('#forgeUpgrade').disabled?.45:1
+}
+$('#forgeUpgrade').addEventListener('click',()=>{
+ const cost=weaponCost();if(save.gold<cost.gold||save.wood<cost.wood)return;save.gold-=cost.gold;save.wood-=cost.wood;save.weaponLevel++;persist();
+ const gb=gearBonuses(),wb=weaponBase();player.damage=wb.damage+gb.damage;player.range=wb.range;updateForge();updateHud();showToast('Weapon upgraded to Lv. '+save.weaponLevel)
+});
+function renderInventory(){
+ const list=$('#inventoryList');list.innerHTML='';
+ if(!save.inventory.length){list.innerHTML='<div class="sub" style="text-align:center">No equipment yet. Search chests.</div>';return}
+ const sorted=[...save.inventory].sort((a,b)=>b.power-a.power);
+ for(const it of sorted){const row=document.createElement('div');row.className='item';const isEq=save.equipped[it.slot]===it.id;
+ row.innerHTML='<div class="itemIcon">'+it.icon+'</div><div><div class="itemName '+it.cls+'">'+it.rarity+' '+it.name+'</div><div class="itemStat">'+it.slot.toUpperCase()+' · '+it.stat+' +'+it.value+' · Power '+it.power+'</div></div>';
+ const b=document.createElement('button');b.className='equip '+(isEq?'equipped':'');b.textContent=isEq?'EQUIPPED':'EQUIP';b.addEventListener('click',()=>{save.equipped[it.slot]=it.id;persist();renderInventory();updateHud();if(player){const gb=gearBonuses(),wb=weaponBase();player.damage=wb.damage+gb.damage;player.maxHp=100+gb.maxHp;player.hp=Math.min(player.hp,player.maxHp);player.speed=168+gb.speed;player.armor=gb.armor;player.pickup=120+gb.pickup}showToast(it.name+' equipped')});row.appendChild(b);list.appendChild(row)}
+}
+function closeModals(){upgradeCard.style.display='none';forgeCard.style.display='none';inventoryCard.style.display='none'}
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{document.getElementById(b.dataset.close).style.display='none';if(state==='upgrade'||state==='forge'||state==='inventory')state='play'}));
+$('#gearBtn').addEventListener('click',()=>{renderInventory();inventoryCard.style.display='block';if(state==='play')state='inventory'});
+$('#equipmentMenu').addEventListener('click',()=>{renderInventory();inventoryCard.style.display='block';state='menu'});
 function update(dt){
  if(state!=='play')return;
- let vx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vy=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);vx+=joyVec.x;vy+=joyVec.y;let m=Math.hypot(vx,vy)||1;vx/=m;vy/=m;
- player.x=clamp(player.x+vx*player.speed*dt,30,world.w-30);player.y=clamp(player.y+vy*player.speed*dt,30,world.h-30);player.spin+=dt*5.8;player.ifr=Math.max(0,player.ifr-dt);
- for(const e of enemies){if(e.dead)continue;e.hitCd=Math.max(0,e.hitCd-dt);e.flash=Math.max(0,e.flash-dt);let dx=player.x-e.x,dy=player.y-e.y,dm=Math.hypot(dx,dy)||1;e.x+=dx/dm*e.speed*dt;e.y+=dy/dm*e.speed*dt;if(dm<player.range+e.r)damageEnemy(e,player.damage);if(dm<player.r+e.r+2&&player.ifr<=0){player.hp-=10+level*.12;player.ifr=.5;if(player.hp<=0)defeat()}}
+ let vx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vy=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);vx+=joyVec.x;vy+=joyVec.y;let m=Math.hypot(vx,vy)||1;if(Math.hypot(vx,vy)>.05){vx/=m;vy/=m}else{vx=0;vy=0}
+ player.x=clamp(player.x+vx*player.speed*dt,30,world.w-30);player.y=clamp(player.y+vy*player.speed*dt,30,world.h-30);player.spin+=dt*(5.8+save.weaponLevel*.015);player.ifr=Math.max(0,player.ifr-dt);
+ for(const e of enemies){if(e.dead)continue;e.hitCd=Math.max(0,e.hitCd-dt);e.flash=Math.max(0,e.flash-dt);let dx=player.x-e.x,dy=player.y-e.y,dm=Math.hypot(dx,dy)||1;e.x+=dx/dm*e.speed*dt;e.y+=dy/dm*e.speed*dt;if(dm<player.range+e.r)damageEnemy(e,player.damage);if(dm<player.r+e.r+2&&player.ifr<=0){let taken=Math.max(1,e.damage-player.armor);player.hp-=taken;floaters.push({x:player.x,y:player.y-25,text:'-'+Math.round(taken),life:.6,color:'#ff7b74'});player.ifr=.48;if(player.hp<=0)defeat()}}
  enemies=enemies.filter(e=>!e.dead);
- for(const d of drops){let dd=dist(player,d);if(dd<120){d.x+=(player.x-d.x)*dt*5;d.y+=(player.y-d.y)*dt*5}if(dd<24){if(d.type==='coin')stats.coins+=10;else stats.gems++;d.dead=true}}
+ for(const t of trees){if(t.dead)continue;t.hitCd=Math.max(0,t.hitCd-dt);t.flash=Math.max(0,t.flash-dt);if(dist(player,t)<player.range+t.r*.55)damageTree(t,player.damage)}
+ trees=trees.filter(t=>!t.dead);
+ for(const d of drops){let dd=dist(player,d);if(dd<player.pickup){d.x+=(player.x-d.x)*dt*6;d.y+=(player.y-d.y)*dt*6}if(dd<24){if(d.type==='gold')save.gold+=d.amount;if(d.type==='wood')save.wood+=d.amount;if(d.type==='gem')save.gems+=d.amount;d.dead=true;persist()}}
  drops=drops.filter(d=>!d.dead);
- for(const c of crates){if(!c.open&&dist(player,c)<28){c.open=true;stats.chests++;stats.coins+=30;particles.push({x:c.x,y:c.y,life:.7})}}
- interactPads();
- for(const f of floaters){f.y-=24*dt;f.life-=dt}floaters=floaters.filter(f=>f.life>0);for(const p of particles)p.life-=dt;particles=particles.filter(p=>p.life>0);
+ for(const c of chests)if(!c.open&&dist(player,c)<30)openChest(c);
+ interactStations();
+ for(const f of floaters){f.y-=25*dt;f.life-=dt}floaters=floaters.filter(f=>f.life>0);for(const p of particles)p.life-=dt;particles=particles.filter(p=>p.life>0);
  cam.x+=(clamp(player.x-W/2,0,world.w-W)-cam.x)*Math.min(1,dt*7);cam.y+=(clamp(player.y-H/2,0,world.h-H)-cam.y)*Math.min(1,dt*7);updateHud()
 }
 function circle(x,y,r,fill){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill()}
+function drawTree(t){
+ ctx.save();ctx.translate(t.x,t.y);if(t.flash>0)ctx.globalAlpha=.6;ctx.fillStyle='#6b4425';ctx.fillRect(-5,8,10,25);circle(0,0,t.r,'#285f36');circle(-12,4,t.r*.63,'#347542');circle(11,3,t.r*.57,'#2d6b3d');ctx.globalAlpha=1;
+ if(t.hp<t.maxHp){ctx.fillStyle='#0009';ctx.fillRect(-22,-t.r-12,44,5);ctx.fillStyle='#7ed86c';ctx.fillRect(-22,-t.r-12,44*t.hp/t.maxHp,5)}ctx.restore()
+}
 function draw(){
- ctx.fillStyle='#173321';ctx.fillRect(0,0,W,H);
- ctx.save();ctx.translate(-cam.x,-cam.y);
+ ctx.fillStyle='#173321';ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(-cam.x,-cam.y);
  for(let gx=0;gx<world.w;gx+=90)for(let gy=0;gy<world.h;gy+=90){ctx.fillStyle=((gx+gy)/90)%2?'#183823':'#16331f';ctx.fillRect(gx,gy,90,90)}
- for(const t of trees){ctx.fillStyle='#0d2216';circle(t.x+5,t.y+10,t.r,'#0d2216');circle(t.x,t.y,t.r,'#275d36');circle(t.x-10,t.y+4,t.r*.65,'#2f6b40')}
- for(const c of crates){ctx.fillStyle=c.open?'#6f5530':'#8b6635';ctx.fillRect(c.x-15,c.y-15,30,30);ctx.strokeStyle='#35240f';ctx.strokeRect(c.x-15,c.y-15,30,30)}
- for(const u of upgradePads){if(u.used)continue;let pulse=1+Math.sin(performance.now()/250)*.08;ctx.save();ctx.translate(u.x,u.y);ctx.scale(pulse,pulse);circle(0,0,34,'#ffbc3d33');circle(0,0,23,'#ffb22f55');ctx.fillStyle='#fff';ctx.font='700 12px system-ui';ctx.textAlign='center';ctx.fillText('Upgrade',0,-42);ctx.restore()}
- for(const d of drops){ctx.font='18px system-ui';ctx.fillText(d.type==='coin'?'🪙':'💎',d.x-9,d.y+7)}
- for(const e of enemies){if(e.dead)continue;circle(e.x,e.y,e.r+3,'#0005');circle(e.x,e.y,e.r,e.flash>0?'#fff':'#6f3b2f');ctx.fillStyle='#2c1915';ctx.fillRect(e.x-4,e.y-5,3,3);ctx.fillRect(e.x+3,e.y-5,3,3);ctx.fillStyle='#3d1111';ctx.fillRect(e.x-17,e.y-25,34,4);ctx.fillStyle='#d95949';ctx.fillRect(e.x-17,e.y-25,34*Math.max(0,e.hp/e.maxHp),4)}
- // player
+ ctx.strokeStyle='#254a2e';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,world.h*.52);ctx.bezierCurveTo(500,world.h*.4,1100,world.h*.7,world.w,world.h*.48);ctx.stroke();
+ for(const t of trees)drawTree(t);
+ for(const c of chests){ctx.fillStyle=c.open?'#5c4932':'#9a6a2f';ctx.fillRect(c.x-16,c.y-13,32,26);ctx.fillStyle='#d4a552';ctx.fillRect(c.x-16,c.y-2,32,5);ctx.strokeStyle='#35240f';ctx.strokeRect(c.x-16,c.y-13,32,26)}
+ for(const u of upgradePads){if(u.used)continue;let pulse=1+Math.sin(performance.now()/250)*.08;ctx.save();ctx.translate(u.x,u.y);ctx.scale(pulse,pulse);circle(0,0,34,'#8c6cff38');circle(0,0,23,'#8c6cff62');ctx.fillStyle='#fff';ctx.font='800 12px system-ui';ctx.textAlign='center';ctx.fillText('Upgrade',0,-42);ctx.restore()}
+ if(forge){ctx.save();ctx.translate(forge.x,forge.y);circle(0,0,38,'#e1912f35');ctx.fillStyle='#45301d';ctx.fillRect(-22,-14,44,28);ctx.fillStyle='#b8b2a7';ctx.fillRect(-17,-10,34,9);ctx.font='18px system-ui';ctx.textAlign='center';ctx.fillText('🔨',0,9);ctx.fillStyle='#fff';ctx.font='800 12px system-ui';ctx.fillText('Blacksmith',0,-45);ctx.restore()}
+ for(const d of drops){ctx.font='18px system-ui';ctx.textAlign='left';ctx.fillText(d.type==='gold'?'🪙':d.type==='wood'?'🪵':'💎',d.x-9,d.y+7)}
+ for(const e of enemies){if(e.dead)continue;circle(e.x,e.y,e.r+3,'#0005');circle(e.x,e.y,e.r,e.flash>0?'#fff':e.color);ctx.fillStyle='#2c1915';ctx.fillRect(e.x-4,e.y-5,3,3);ctx.fillRect(e.x+3,e.y-5,3,3);if(e.type==='brute'){ctx.fillStyle='#442326';ctx.fillRect(e.x-13,e.y-3,26,7)}if(e.type==='runner'){ctx.fillStyle='#c3a65a';ctx.fillRect(e.x-11,e.y+7,22,3)}ctx.fillStyle='#3d1111';ctx.fillRect(e.x-e.r,e.y-e.r-10,e.r*2,4);ctx.fillStyle='#d95949';ctx.fillRect(e.x-e.r,e.y-e.r-10,e.r*2*Math.max(0,e.hp/e.maxHp),4)}
  circle(player.x,player.y,player.r+8,'#ffffff0d');circle(player.x,player.y,player.r,'#b68a46');ctx.fillStyle='#f0d19a';ctx.fillRect(player.x-8,player.y-17,16,12);ctx.fillStyle='#4a2c13';ctx.fillRect(player.x-12,player.y-18,24,6);
- // spinning weapon
- ctx.save();ctx.translate(player.x,player.y);ctx.rotate(player.spin);ctx.strokeStyle='#cfd7d5aa';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,player.range*.72,0,Math.PI*1.5);ctx.stroke();for(let i=0;i<3;i++){let a=i*Math.PI*2/3;ctx.save();ctx.rotate(a);ctx.translate(player.range*.72,0);ctx.rotate(.75);ctx.fillStyle='#dfe8e5';ctx.fillRect(-4,-3,42,7);ctx.fillStyle='#765936';ctx.fillRect(-13,-4,12,9);ctx.restore()}ctx.restore();
- // hp
- ctx.fillStyle='#0008';ctx.fillRect(player.x-28,player.y-38,56,6);ctx.fillStyle='#57d46b';ctx.fillRect(player.x-28,player.y-38,56*(player.hp/player.maxHp),6);
- for(const f of floaters){ctx.globalAlpha=f.life/.6;ctx.fillStyle='#fff';ctx.font='900 17px system-ui';ctx.textAlign='center';ctx.fillText(f.text,f.x,f.y)}ctx.globalAlpha=1;
- ctx.restore();
- // vignette
- let g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.2,W/2,H/2,Math.max(W,H)*.7);g.addColorStop(0,'#0000');g.addColorStop(1,'#000b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.save();ctx.translate(player.x,player.y);ctx.rotate(player.spin);ctx.strokeStyle='#dce3df99';ctx.lineWidth=3+Math.min(4,save.weaponLevel/8);ctx.beginPath();ctx.arc(0,0,player.range*.72,0,Math.PI*1.55);ctx.stroke();const blades=Math.min(5,2+Math.floor(save.weaponLevel/6));for(let i=0;i<blades;i++){let a=i*Math.PI*2/blades;ctx.save();ctx.rotate(a);ctx.translate(player.range*.72,0);ctx.rotate(.72);ctx.fillStyle=save.weaponLevel>=15?'#f1c96a':'#dfe8e5';ctx.fillRect(-4,-4,42+Math.min(16,save.weaponLevel),8);ctx.fillStyle='#765936';ctx.fillRect(-14,-5,13,10);ctx.restore()}ctx.restore();
+ ctx.fillStyle='#0008';ctx.fillRect(player.x-30,player.y-40,60,7);ctx.fillStyle=player.hp/player.maxHp>.35?'#57d46b':'#df6258';ctx.fillRect(player.x-30,player.y-40,60*Math.max(0,player.hp/player.maxHp),7);
+ for(const f of floaters){ctx.globalAlpha=f.life/.6;ctx.fillStyle=f.color||'#fff';ctx.font='900 17px system-ui';ctx.textAlign='center';ctx.fillText(f.text,f.x,f.y)}ctx.globalAlpha=1;
+ ctx.restore();let g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.2,W/2,H/2,Math.max(W,H)*.7);g.addColorStop(0,'#0000');g.addColorStop(1,'#000a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)
 }
 function loop(ts){let dt=Math.min(.033,(ts-last)/1000||0);last=ts;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
 addEventListener('keydown',e=>{keys[e.code]=true});addEventListener('keyup',e=>{keys[e.code]=false});
-canvas.addEventListener('pointerdown',e=>{activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);moveJoy(e)});
+canvas.addEventListener('pointerdown',e=>{if(state!=='play')return;activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);moveJoy(e)});
 canvas.addEventListener('pointermove',e=>{if(e.pointerId===activePointer)moveJoy(e)});
 canvas.addEventListener('pointerup',e=>{if(e.pointerId===activePointer){activePointer=null;joyVec={x:0,y:0};stick.style.transform='translate(0,0)'}});
-function moveJoy(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,m=Math.hypot(dx,dy)||1,max=26;if(m>max){dx=dx/m*max;dy=dy/m*max}joyVec={x:dx/max,y:dy/max};stick.style.transform='translate('+dx+'px,'+dy+'px)'}
-play.onclick=()=>start(Math.min(unlocked,100));reset.onclick=()=>{localStorage.removeItem('huntUnlocked');unlocked=1;stats={coins:0,gems:0,chests:0,kills:0};updateHud();play.textContent='PLAY LEVEL 1'};
+function moveJoy(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,m=Math.hypot(dx,dy)||1,max=27;if(m>max){dx=dx/m*max;dy=dy/m*max}joyVec={x:dx/max,y:dy/max};stick.style.transform='translate('+dx+'px,'+dy+'px)'}
+play.addEventListener('click',()=>start(Math.min(save.unlocked,100)));
+reset.addEventListener('click',()=>{if(!confirm('Reset all progression, currency, weapon upgrades, and equipment?'))return;save=structuredClone(defaultSave);persist();updateHud();renderInventory();$('#menuSub').textContent='Progress reset. Cut trees, open chests, collect equipment, and build your weapon again.'});
 updateHud();buildStage();
 })();
 </script>
