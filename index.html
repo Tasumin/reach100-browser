@@ -352,6 +352,7 @@ function showComparison(it){
  if($('#fuseSelected'))$('#fuseSelected').addEventListener('click',()=>fuseGearItem(it.id));
  renderTotalStats(it)
 }
+let selectedGearId=null,gearFilter='all';
 function clearComparison(){const box=$('#compareBox');box.innerHTML='<div class="compareTitle">Select an item</div><div class="deltaZero">Tap any inventory item to compare, equip, upgrade, or fuse it.</div>';renderTotalStats()}
 function renderInventory(){
  renderPaperDoll();renderTotalStats();
@@ -375,10 +376,10 @@ function renderInventory(){
 document.querySelectorAll('#gearFilters .gearFilter').forEach(b=>b.addEventListener('click',()=>{gearFilter=b.dataset.filter;selectedGearId=null;renderInventory()}));
 function closeModals(){upgradeCard.style.display='none';forgeCard.style.display='none';inventoryCard.style.display='none'}
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>{document.getElementById(b.dataset.close).style.display='none';if(state==='upgrade'||state==='forge'||state==='inventory')state='play'}));
-function openInventory(){renderInventory();inventoryCard.style.display='block';inventoryCard.style.zIndex='50';if(state==='play')state='inventory'}
+function openInventory(){inventoryCard.style.display='block';inventoryCard.style.zIndex='50';renderInventory();if(state==='play')state='inventory'}
 $('#gearBtn').addEventListener('pointerdown',e=>{e.stopPropagation()});
 $('#gearBtn').addEventListener('click',e=>{e.stopPropagation();openInventory()});
-$('#equipmentMenu').addEventListener('click',()=>{renderInventory();inventoryCard.style.display='block';state='menu'});
+$('#equipmentMenu').addEventListener('click',()=>{inventoryCard.style.display='block';inventoryCard.style.zIndex='50';renderInventory();state='menu'});
 function applyBoost(type){if(type==='heal'){player.hp=Math.min(player.maxHp,player.hp+player.maxHp*.35);showToast('Healing boost +35% HP');return}boosts[type]=Math.max(boosts[type]||0,type==='shield'?10:12);showToast(type.toUpperCase()+' boost!')}
 function updateBoostHud(){const box=$('#boosts');box.innerHTML='';for(const [k,v] of Object.entries(boosts)){if(v>0){const d=document.createElement('div');d.className='boostChip';d.innerHTML='<strong>'+k.toUpperCase()+'</strong> '+v.toFixed(1)+'s';box.appendChild(d)}}}
 function clearBuildButtons(){for(const id of ['turretBtn','fenceBtn','trapBtn','fireBtn','upgradeBuildBtn'])$('#'+id).classList.remove('active')}
