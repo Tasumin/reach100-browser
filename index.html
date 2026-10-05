@@ -1,174 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>100 Level Rush</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>100 Level Hunt</title>
 <style>
-  :root{--bg:#080b14;--panel:#12182a;--text:#f6f7fb;--muted:#98a2bd;--accent:#7cf5ff;--accent2:#b375ff;--danger:#ff5470;--good:#55f29a}
-  *{box-sizing:border-box} html,body{margin:0;height:100%;background:radial-gradient(circle at 50% -20%,#1f2d59 0,#0c1020 36%,#050710 75%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
-  body{display:grid;place-items:center;padding:12px;touch-action:none;user-select:none}
-  #shell{width:min(100%,520px);height:min(96vh,920px);min-height:580px;display:flex;flex-direction:column;gap:10px}
-  header{display:flex;align-items:center;justify-content:space-between;padding:0 4px}
-  .brand{font-weight:900;letter-spacing:.08em;font-size:clamp(18px,4vw,24px)} .brand b{color:var(--accent)}
-  .pill{background:#ffffff12;border:1px solid #ffffff1c;border-radius:999px;padding:7px 11px;color:var(--muted);font-size:12px;font-weight:700}
-  #gameWrap{position:relative;flex:1;min-height:0;border-radius:26px;overflow:hidden;border:1px solid #ffffff20;background:#0b1020;box-shadow:0 22px 70px #0008, inset 0 0 50px #7cf5ff08}
-  canvas{width:100%;height:100%;display:block;background:linear-gradient(#17243c,#0b1326 58%,#0b1020)}
-  #hud{position:absolute;inset:0;pointer-events:none;padding:16px;display:flex;flex-direction:column;justify-content:space-between}
-  .hudTop{display:flex;justify-content:space-between;align-items:flex-start}.hudCard{background:#07101ecf;border:1px solid #ffffff1a;backdrop-filter:blur(8px);border-radius:15px;padding:9px 12px;box-shadow:0 8px 30px #0004}.hudBig{font-size:22px;font-weight:900;line-height:1}.hudSmall{font-size:10px;letter-spacing:.14em;color:#aeb8ce;font-weight:800;margin-top:4px}
-  #progressOuter{height:8px;border-radius:999px;background:#ffffff14;overflow:hidden;width:150px;margin-top:8px}#progress{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px}
-  .hint{text-align:center;color:#eafcffb8;font-weight:800;font-size:12px;text-shadow:0 2px 10px #000;transition:.2s opacity}
-  #overlay{position:absolute;inset:0;background:#050916d9;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:24px;z-index:4}
-  .panel{width:100%;max-width:390px;background:linear-gradient(180deg,#18223aee,#0d1426ee);border:1px solid #ffffff20;border-radius:28px;padding:26px;box-shadow:0 30px 90px #000b;text-align:center}
-  .eyebrow{font-size:11px;letter-spacing:.22em;color:var(--accent);font-weight:900;text-transform:uppercase}.title{font-size:clamp(34px,8vw,52px);line-height:.95;font-weight:1000;margin:8px 0 12px;letter-spacing:-.04em}.subtitle{color:var(--muted);line-height:1.5;font-size:14px;margin:0 auto 22px;max-width:310px}
-  button{appearance:none;border:0;border-radius:16px;padding:14px 16px;font-weight:900;font-size:15px;cursor:pointer}.primary{width:100%;background:linear-gradient(135deg,var(--accent),#8fa9ff 55%,var(--accent2));color:#07101d;box-shadow:0 10px 28px #5de9ff3d}.secondary{background:#ffffff10;color:white;border:1px solid #ffffff18}.row{display:flex;gap:10px;margin-top:10px}.row>*{flex:1}
-  #levelGrid{display:none;grid-template-columns:repeat(5,1fr);gap:7px;max-height:340px;overflow:auto;margin-top:18px;padding-right:4px}.lvl{aspect-ratio:1;padding:0;border-radius:12px;background:#ffffff0c;color:#7d879f;border:1px solid #ffffff0c;font-size:12px}.lvl.open{background:#ffffff12;color:white;border-color:#ffffff20}.lvl.done{background:#56f29b24;color:#8ff9bc;border-color:#55f29a50}.lvl.current{outline:2px solid var(--accent)}
-  footer{display:flex;gap:8px;align-items:center;justify-content:center}.kbd{font-size:11px;color:#aeb8ce;background:#ffffff0b;border:1px solid #ffffff14;border-radius:10px;padding:7px 10px}
-  @media (max-width:560px){body{padding:0}#shell{width:100%;height:100%;min-height:0;gap:0}header,footer{display:none}#gameWrap{border-radius:0;border:0}}
+html,body{margin:0;height:100%;overflow:hidden;background:#07130d;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;touch-action:none}
+*{box-sizing:border-box}body{display:grid;place-items:center}
+#wrap{position:relative;width:min(100vw,520px);height:100vh;max-height:940px;background:#0d1c13;overflow:hidden}
+canvas{width:100%;height:100%;display:block}
+#hud{position:absolute;inset:0;pointer-events:none}
+.top{position:absolute;left:12px;right:12px;top:max(12px,env(safe-area-inset-top));display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.stats{display:grid;gap:4px;font-weight:800;font-size:13px;text-shadow:0 2px 4px #000}
+.stat{display:flex;align-items:center;gap:7px}.ico{width:16px;text-align:center}
+.objective{position:absolute;left:50%;transform:translateX(-50%);top:max(14px,env(safe-area-inset-top));width:190px;text-align:center}
+.objTitle{background:#8f2330;padding:8px 14px;border-radius:3px;font-size:12px;font-weight:900;box-shadow:0 4px 10px #0005}
+.objSub{margin-top:5px;font-size:10px;font-weight:800;color:#ddd}.checks{margin-top:3px;display:flex;justify-content:center;gap:5px}.check{width:22px;height:20px;border-radius:4px;background:#326d35;border:1px solid #72c26f;display:grid;place-items:center;font-weight:1000}
+.level{position:absolute;right:14px;top:90px;background:#26170d;border:2px solid #9f6f30;border-radius:50%;width:46px;height:46px;display:grid;place-items:center;font-size:10px;font-weight:900;line-height:1;text-align:center}
+#msg{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);font-size:32px;font-weight:1000;text-shadow:0 4px 10px #000;opacity:0;transition:.2s}
+#overlay{position:absolute;inset:0;background:#06100bdb;display:grid;place-items:center;padding:26px;z-index:5}
+.panel{width:100%;max-width:390px;background:linear-gradient(180deg,#1b2e22,#0e1c14);border:1px solid #ffffff20;border-radius:26px;padding:24px;text-align:center;box-shadow:0 30px 90px #000b}
+.eyebrow{font-size:11px;letter-spacing:.2em;color:#77e69a;font-weight:900}.title{font-size:44px;line-height:.95;font-weight:1000;margin:8px 0 12px}.sub{color:#b2c1b6;line-height:1.5;font-size:14px}
+button{border:0;border-radius:15px;padding:14px 16px;font-weight:900;font-size:15px;cursor:pointer}.primary{width:100%;background:linear-gradient(135deg,#ffd468,#f39f43);color:#2b1705;margin-top:16px}.secondary{width:100%;margin-top:9px;background:#ffffff10;color:white;border:1px solid #ffffff1d}
+#upgradeCard{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88%,360px);background:#102016f2;border:1px solid #ffffff25;border-radius:22px;padding:18px;display:none;z-index:4;box-shadow:0 25px 80px #000c}
+#upgradeCard h3{margin:0 0 6px;text-align:center}.upgrades{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.up{background:#ffffff0c;border:1px solid #ffffff18;border-radius:14px;padding:12px 8px;text-align:center;font-size:12px;font-weight:800}.up b{display:block;font-size:22px;margin-bottom:5px}
+#joy{position:absolute;left:34px;bottom:max(28px,env(safe-area-inset-bottom));width:92px;height:92px;border-radius:50%;background:#ffffff12;border:2px solid #ffffff12;pointer-events:none}
+#stick{position:absolute;width:38px;height:38px;border-radius:50%;background:#ffffff25;left:25px;top:25px;border:1px solid #ffffff2a}
+#skill{position:absolute;right:22px;bottom:max(36px,env(safe-area-inset-bottom));width:76px;height:76px;border-radius:50%;background:radial-gradient(circle,#7b4b18,#2b1709);border:3px solid #c38b3e;display:grid;place-items:center;font-size:11px;font-weight:900;pointer-events:none}
 </style>
 </head>
 <body>
-<div id="shell">
-  <header><div class="brand">100 LEVEL <b>RUSH</b></div><div class="pill">100 micro-levels</div></header>
-  <div id="gameWrap">
-    <canvas id="game"></canvas>
-    <div id="hud">
-      <div class="hudTop">
-        <div class="hudCard"><div class="hudBig" id="levelText">1</div><div class="hudSmall">LEVEL</div></div>
-        <div class="hudCard" style="text-align:right"><div class="hudBig" id="bestText">0</div><div class="hudSmall">BEST</div><div id="progressOuter"><div id="progress"></div></div></div>
-      </div>
-      <div class="hint" id="hint">TAP / SPACE TO JUMP · HOLD FOR HIGHER</div>
+<div id="wrap">
+<canvas id="game"></canvas>
+<div id="hud">
+  <div class="top">
+    <div class="stats">
+      <div class="stat"><span class="ico">🪙</span><span id="coins">0</span></div>
+      <div class="stat"><span class="ico">💎</span><span id="gems">0</span></div>
+      <div class="stat"><span class="ico">📦</span><span id="chests">0</span></div>
+      <div class="stat"><span class="ico">💀</span><span id="kills">0</span></div>
     </div>
-    <div id="overlay">
-      <div class="panel" id="panel">
-        <div class="eyebrow">Original browser arcade</div>
-        <div class="title">REACH<br><span style="color:var(--accent)">LEVEL 100</span></div>
-        <p class="subtitle">One control. Tiny stages. Instant retries. Every few levels, the rules get meaner.</p>
-        <button class="primary" id="playBtn">PLAY LEVEL 1</button>
-        <div class="row"><button class="secondary" id="selectBtn">LEVEL SELECT</button><button class="secondary" id="resetBtn">RESET SAVE</button></div>
-        <div id="levelGrid"></div>
-      </div>
+    <div class="objective">
+      <div class="objTitle">Kill Them All</div>
+      <div class="objSub">Stage Treasures</div>
+      <div class="checks"><div class="check" id="c1">✓</div><div class="check" id="c2">✓</div><div class="check" id="c3">✓</div></div>
     </div>
+    <div style="width:54px"></div>
   </div>
-  <footer><div class="kbd">SPACE / CLICK / TAP = jump</div><div class="kbd">R = restart</div><div class="kbd">ESC = menu</div></footer>
+  <div class="level" id="levelBadge">LV<br>1</div>
+  <div id="msg">LEVEL CLEAR</div>
+  <div id="joy"><div id="stick"></div></div>
+  <div id="skill">SKILL</div>
+</div>
+<div id="upgradeCard">
+  <h3>Choose Upgrade</h3>
+  <div class="sub" style="text-align:center;margin-bottom:12px">Pick one and keep fighting.</div>
+  <div class="upgrades">
+    <button class="up" data-up="damage"><b>⚔️</b>Damage +25%</button>
+    <button class="up" data-up="range"><b>🌀</b>Blade Range +20%</button>
+    <button class="up" data-up="speed"><b>👟</b>Move Speed +15%</button>
+  </div>
+</div>
+<div id="overlay">
+  <div class="panel">
+    <div class="eyebrow">TOP-DOWN SURVIVAL</div>
+    <div class="title">REACH<br><span style="color:#ffd468">LEVEL 100</span></div>
+    <div class="sub">Move with the joystick or WASD. Your spinning weapon attacks automatically. Clear enemies, grab rewards, and upgrade as stages get harder.</div>
+    <button class="primary" id="play">PLAY LEVEL 1</button>
+    <button class="secondary" id="reset">RESET PROGRESS</button>
+  </div>
+</div>
 </div>
 <script>
-(() => {
-  const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
-  const overlay=document.getElementById('overlay'),panel=document.getElementById('panel'),playBtn=document.getElementById('playBtn'),selectBtn=document.getElementById('selectBtn'),resetBtn=document.getElementById('resetBtn'),levelGrid=document.getElementById('levelGrid');
-  const levelText=document.getElementById('levelText'),bestText=document.getElementById('bestText'),progress=document.getElementById('progress'),hint=document.getElementById('hint');
-  let W=420,H=760,dpr=1,last=0,state='menu',level=1,unlocked=Number(localStorage.getItem('rushUnlocked')||1),deaths=0;
-  let player, platforms=[], spikes=[], movers=[], goal, particles=[], cameraX=0, levelWidth=1200, t=0, jumpHeld=false;
-  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const rand=(seed)=>{let x=Math.sin(seed*999.917)*43758.5453;return x-Math.floor(x)};
-
-  function resize(){
-    const r=canvas.getBoundingClientRect(); dpr=Math.min(2,devicePixelRatio||1); canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);W=r.width;H=r.height;ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-  addEventListener('resize',resize); resize();
-
-  function levelTheme(n){
-    const zones=[['#15253d','#0a1223','#7cf5ff'],['#24153b','#110a22','#d383ff'],['#351b24','#170b12','#ff7f91'],['#17352d','#0b1815','#64f0b2'],['#3b3117','#1b1508','#ffd66b']];
-    return zones[Math.floor((n-1)/20)%zones.length];
-  }
-
-  function buildLevel(n){
-    platforms=[];spikes=[];movers=[];particles=[];cameraX=0;t=0;
-    const difficulty=(n-1)/99;
-    const baseY=H*0.76;
-    levelWidth=1000 + Math.floor(n/8)*50 + (n%5)*35;
-    platforms.push({x:-50,y:baseY,w:260,h:120});
-    let x=210; let py=baseY;
-    const chunks=7+Math.floor(n/12);
-    for(let i=0;i<chunks;i++){
-      const r=rand(n*31+i*17);
-      let gap=45+Math.floor(30*difficulty)+Math.floor(r*40);
-      if(n<4) gap=35+i*2;
-      const w=90+Math.floor(rand(n*71+i)*95);
-      const dy=(rand(n*19+i*13)-.5)*(n<6?35:110);
-      py=clamp(py+dy,H*.42,H*.82);
-      if(i===chunks-1) py=baseY-20;
-      const moving=n>12 && i%4===2 && rand(n+i)>.35;
-      if(moving){
-        const vertical=n>35 && rand(n*7+i)>.5;
-        movers.push({x:x+gap,y:py,w,h:20,baseX:x+gap,baseY:py,amp:vertical?45:55,speed:.8+rand(n+i*9)*1.2,vertical,phase:rand(n*3+i)*6.28});
-      } else platforms.push({x:x+gap,y:py,w,h:20});
-      if(n>3 && i>0 && rand(n*101+i*5) < .28 + difficulty*.28){
-        const count=1+Math.floor(rand(n*41+i)*Math.min(4,1+n/30));
-        spikes.push({x:x+gap+w*.34,y:py-16,w:18*count,h:16,count});
-      }
-      x += gap+w;
-    }
-    platforms.push({x:x+55,y:baseY-10,w:230,h:120});
-    goal={x:x+145,y:baseY-72,w:42,h:62}; levelWidth=goal.x+160;
-    player={x:60,y:baseY-44,w:28,h:40,vx:0,vy:0,onGround:false,coyote:0,dead:false,win:false,trail:[]};
-    updateHud();
-  }
-
-  function updateHud(){levelText.textContent=level;bestText.textContent=Math.max(0,unlocked-1);progress.style.width=((level-1)/99*100)+'%';}
-  function startLevel(n=level){level=clamp(n,1,100);buildLevel(level);overlay.style.display='none';state='play';hint.style.opacity='1';setTimeout(()=>hint.style.opacity='.3',1800);}
-  function die(){if(player.dead||player.win)return;player.dead=true;deaths++;burst(player.x+14,player.y+20,'#ff5470',24);setTimeout(()=>{if(state==='play')startLevel(level)},430);}
-  function win(){if(player.win)return;player.win=true;burst(goal.x+21,goal.y+25,'#7cf5ff',40); if(level===unlocked && unlocked<101){unlocked=level+1;localStorage.setItem('rushUnlocked',unlocked)} updateHud(); setTimeout(()=>{ if(level>=100){showWinMenu()} else startLevel(level+1)},620);}
-  function showMenu(){state='menu';overlay.style.display='flex';levelGrid.style.display='none';playBtn.textContent='PLAY LEVEL '+Math.min(unlocked,100);level=Math.min(unlocked,100);renderGrid();}
-  function showWinMenu(){state='menu';overlay.style.display='flex';panel.innerHTML=`<div class="eyebrow">100 / 100</div><div class="title">YOU<br><span style="color:var(--good)">MADE IT.</span></div><p class="subtitle">All 100 stages cleared. Deaths this session: <b style="color:white">${deaths}</b></p><button class="primary" id="again">PLAY AGAIN</button><div class="row"><button class="secondary" id="levels">LEVEL SELECT</button></div>`;document.getElementById('again').onclick=()=>startLevel(1);document.getElementById('levels').onclick=()=>location.reload();}
-
-  function jump(){
-    if(state==='menu'){startLevel(Math.min(unlocked,100));return}
-    if(state!=='play'||player.dead||player.win)return;
-    jumpHeld=true;
-    if(player.onGround||player.coyote>0){player.vy=-520;player.onGround=false;player.coyote=0;burst(player.x+14,player.y+38,'#7cf5ff',7)}
-  }
-  function releaseJump(){jumpHeld=false;if(player&&player.vy<-250)player.vy=-250}
-  addEventListener('keydown',e=>{if(['Space','ArrowUp','KeyW'].includes(e.code)){e.preventDefault();jump()} if(e.code==='KeyR'&&state==='play')startLevel(level); if(e.code==='Escape')showMenu()});
-  addEventListener('keyup',e=>{if(['Space','ArrowUp','KeyW'].includes(e.code))releaseJump()});
-  canvas.addEventListener('pointerdown',e=>{e.preventDefault();jump()});canvas.addEventListener('pointerup',releaseJump);canvas.addEventListener('pointercancel',releaseJump);
-
-  function rectHit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
-  function burst(x,y,color,count){for(let i=0;i<count;i++)particles.push({x,y,vx:(Math.random()-.5)*260,vy:(Math.random()-.7)*260,life:.45+Math.random()*.45,size:2+Math.random()*4,color})}
-
-  function update(dt){
-    if(state!=='play')return;t+=dt;
-    for(const m of movers){if(m.vertical)m.y=m.baseY+Math.sin(t*m.speed+m.phase)*m.amp;else m.x=m.baseX+Math.sin(t*m.speed+m.phase)*m.amp}
-    if(!player.dead&&!player.win){
-      const speed=185+Math.min(115,level*1.15);player.vx=speed;player.vy+=1350*dt;if(jumpHeld&&player.vy<0)player.vy-=210*dt;
-      const oldY=player.y;player.x+=player.vx*dt;player.y+=player.vy*dt;player.onGround=false;
-      const all=platforms.concat(movers);
-      for(const p of all){
-        if(player.x+player.w>p.x&&player.x<p.x+p.w&&oldY+player.h<=p.y+5&&player.y+player.h>=p.y&&player.vy>=0){player.y=p.y-player.h;player.vy=0;player.onGround=true;}
-      }
-      if(player.onGround)player.coyote=.095; else player.coyote=Math.max(0,player.coyote-dt);
-      for(const s of spikes){if(rectHit(player,{x:s.x,y:s.y+3,w:s.w,h:s.h-3}))die()}
-      if(player.y>H+80)die();
-      if(rectHit(player,goal))win();
-      player.trail.push({x:player.x+3,y:player.y+20,life:.24});if(player.trail.length>12)player.trail.shift();
-      cameraX+=(clamp(player.x-W*.28,0,Math.max(0,levelWidth-W))-cameraX)*Math.min(1,dt*6);
-    }
-    for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=600*dt;p.life-=dt}
-    particles=particles.filter(p=>p.life>0);
-    for(const q of player.trail||[])q.life-=dt; player.trail=(player.trail||[]).filter(q=>q.life>0);
-  }
-
-  function drawSpike(s,ox){ctx.fillStyle='#ff5470';const n=s.count||1,sw=s.w/n;for(let i=0;i<n;i++){ctx.beginPath();ctx.moveTo(s.x-cameraX+ox+i*sw,s.y+s.h);ctx.lineTo(s.x-cameraX+ox+i*sw+sw/2,s.y);ctx.lineTo(s.x-cameraX+ox+(i+1)*sw,s.y+s.h);ctx.closePath();ctx.fill()}}
-  function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
-  function draw(){
-    const th=levelTheme(level);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,th[0]);g.addColorStop(1,th[1]);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    ctx.globalAlpha=.22;ctx.fillStyle=th[2];for(let i=0;i<25;i++){let sx=((i*97 - cameraX*.08)%(W+100)+W+100)%(W+100)-50;let sy=(i*131)%Math.floor(H*.62);ctx.fillRect(sx,sy,2+(i%3===0),2+(i%3===0))}ctx.globalAlpha=1;
-    ctx.globalAlpha=.16;ctx.fillStyle='#fff';for(let i=0;i<14;i++){let bx=((i*86-cameraX*.18)%(W+120)+W+120)%(W+120)-60;let bh=40+(i*37)%130;ctx.fillRect(bx,H*.76-bh,50,bh)}ctx.globalAlpha=1;
-    const fog=ctx.createLinearGradient(0,H*.55,0,H);fog.addColorStop(0,'#0000');fog.addColorStop(1,'#0008');ctx.fillStyle=fog;ctx.fillRect(0,H*.55,W,H*.45);
-    for(const p of platforms){const x=p.x-cameraX;ctx.fillStyle='#dbe7ff';ctx.globalAlpha=.94;roundRect(x,p.y,p.w,p.h,9);ctx.globalAlpha=.16;ctx.fillStyle=th[2];ctx.fillRect(x,p.y,p.w,4);ctx.globalAlpha=1}
-    for(const p of movers){const x=p.x-cameraX;ctx.fillStyle='#ffe58a';roundRect(x,p.y,p.w,p.h,9);ctx.fillStyle='#fff7';ctx.fillRect(x+9,p.y+4,p.w-18,2)}
-    for(const s of spikes)drawSpike(s,0);
-    const gx=goal.x-cameraX, pulse=1+Math.sin(t*5)*.08;ctx.save();ctx.translate(gx+21,goal.y+31);ctx.scale(pulse,pulse);ctx.shadowBlur=24;ctx.shadowColor=th[2];ctx.strokeStyle=th[2];ctx.lineWidth=7;ctx.beginPath();ctx.ellipse(0,0,19,29,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle='#ffffff22';ctx.fill();ctx.restore();
-    for(const q of player.trail||[]){ctx.globalAlpha=Math.max(0,q.life/0.24)*.32;ctx.fillStyle=th[2];roundRect(q.x-cameraX-4,q.y-8,20,16,8)}ctx.globalAlpha=1;
-    const px=player.x-cameraX,py=player.y;ctx.save();ctx.translate(px+14,py+20);ctx.rotate(clamp(player.vy/900,-.25,.25));ctx.fillStyle=player.dead?'#ff5470':'#fff';ctx.shadowBlur=player.dead?18:14;ctx.shadowColor=player.dead?'#ff5470':th[2];roundRect(-14,-20,28,40,9);ctx.shadowBlur=0;ctx.fillStyle='#11182a';ctx.fillRect(3,-9,5,5);ctx.restore();
-    for(const p of particles){ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.fillRect(p.x-cameraX,p.y,p.size,p.size)}ctx.globalAlpha=1;
-    ctx.fillStyle='#ffffff20';ctx.font='900 86px system-ui';ctx.fillText(String(level).padStart(2,'0'),20-cameraX*.04,H*.3);
-  }
-  function loop(ts){const dt=Math.min(.028,(ts-last)/1000||0);last=ts;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
-
-  function renderGrid(){levelGrid.innerHTML='';for(let i=1;i<=100;i++){const b=document.createElement('button');b.className='lvl '+(i<unlocked?'done ':i===unlocked?'open current ':i<unlocked?'open ':'')+(i<=unlocked?'open':'');b.textContent=i;b.disabled=i>unlocked;b.onclick=()=>startLevel(i);levelGrid.appendChild(b)}}
-  playBtn.onclick=()=>startLevel(Math.min(unlocked,100));selectBtn.onclick=()=>{levelGrid.style.display=levelGrid.style.display==='grid'?'none':'grid';renderGrid()};resetBtn.onclick=()=>{if(confirm('Reset all level progress?')){localStorage.removeItem('rushUnlocked');unlocked=1;showMenu()}};
-  buildLevel(1);renderGrid();playBtn.textContent='PLAY LEVEL '+Math.min(unlocked,100);
+(()=> {
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+const ov=document.getElementById('overlay'),play=document.getElementById('play'),reset=document.getElementById('reset');
+const joy=document.getElementById('joy'),stick=document.getElementById('stick'),upgradeCard=document.getElementById('upgradeCard');
+const el={coins:document.getElementById('coins'),gems:document.getElementById('gems'),chests:document.getElementById('chests'),kills:document.getElementById('kills'),lvl:document.getElementById('levelBadge'),msg:document.getElementById('msg')};
+let W=390,H=844,dpr=1,last=0,state='menu',level=1,unlocked=+localStorage.getItem('huntUnlocked')||1;
+let player,enemies=[],drops=[],crates=[],trees=[],upgradePads=[],floaters=[],particles=[],cam={x:0,y:0},keys={},joyVec={x:0,y:0},activePointer=null;
+let stats={coins:0,gems:0,chests:0,kills:0}; let stageKills=0,targetKills=0,upgradesTaken=0;
+const world={w:1800,h:1800};
+function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);canvas.width=r.width*dpr;canvas.height=r.height*dpr;W=r.width;H=r.height;ctx.setTransform(dpr,0,0,dpr,0,0)}addEventListener('resize',resize);resize();
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),rand=(a,b)=>a+Math.random()*(b-a),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function start(n){level=clamp(n,1,100);ov.style.display='none';state='play';buildStage();updateHud()}
+function buildStage(){
+ enemies=[];drops=[];crates=[];trees=[];upgradePads=[];floaters=[];particles=[];stageKills=0;upgradesTaken=0;
+ player={x:world.w/2,y:world.h/2,r:18,hp:100,maxHp:100,speed:175,damage:26,range:78,spin:0,ifr:0};
+ targetKills=18+Math.floor(level*1.8);
+ for(let i=0;i<45;i++)trees.push({x:rand(80,world.w-80),y:rand(80,world.h-80),r:rand(18,32)});
+ for(let i=0;i<12;i++)crates.push({x:rand(100,world.w-100),y:rand(100,world.h-100),open:false});
+ for(let i=0;i<3;i++)upgradePads.push({x:rand(180,world.w-180),y:rand(180,world.h-180),used:false});
+ spawnWave(Math.min(targetKills,12));
+}
+function spawnWave(n){for(let i=0;i<n;i++){let a=Math.random()*Math.PI*2,r=rand(300,650);let x=clamp(player.x+Math.cos(a)*r,40,world.w-40),y=clamp(player.y+Math.sin(a)*r,40,world.h-40);let tier=1+Math.floor((level-1)/20);enemies.push({x,y,r:16,hp:40+level*4+tier*12,maxHp:40+level*4+tier*12,speed:45+level*.55+rand(0,15),hitCd:0,flash:0})}}
+function updateHud(){el.coins.textContent=stats.coins;el.gems.textContent=stats.gems;el.chests.textContent=stats.chests;el.kills.textContent=stats.kills;el.lvl.innerHTML='LV<br>'+level;play.textContent='PLAY LEVEL '+Math.min(unlocked,100)}
+function dropLoot(e){if(Math.random()<.9)drops.push({x:e.x,y:e.y,type:'coin',v:rand(0,Math.PI*2)});if(Math.random()<.11)drops.push({x:e.x+10,y:e.y,type:'gem',v:0})}
+function damageEnemy(e,amt){if(e.hitCd>0)return;e.hitCd=.22;e.hp-=amt;e.flash=.08;floaters.push({x:e.x,y:e.y-20,text:Math.round(amt),life:.6});if(e.hp<=0){stageKills++;stats.kills++;dropLoot(e);e.dead=true;if(stageKills<targetKills&&enemies.filter(v=>!v.dead).length<7)spawnWave(Math.min(6,targetKills-stageKills));if(stageKills>=targetKills)clearStage()}}
+function clearStage(){state='clear';el.msg.style.opacity=1;setTimeout(()=>{el.msg.style.opacity=0;if(level===unlocked&&unlocked<101){unlocked=level+1;localStorage.setItem('huntUnlocked',unlocked)}if(level>=100){showEnd()}else start(level+1)},900)}
+function showEnd(){state='menu';ov.style.display='grid';ov.querySelector('.title').innerHTML='YOU<br><span style="color:#77e69a">MADE IT</span>';ov.querySelector('.sub').textContent='All 100 levels cleared.';play.textContent='PLAY AGAIN';play.onclick=()=>start(1)}
+function defeat(){state='dead';setTimeout(()=>{ov.style.display='grid';ov.querySelector('.title').innerHTML='<span style="color:#e85b63">DEFEATED</span>';ov.querySelector('.sub').innerHTML='Rewards collected: <b>'+stats.coins+' coins</b>, <b>'+stats.gems+' gems</b>, <b>'+stats.chests+' chests</b>.';play.textContent='RETRY LEVEL '+level;play.onclick=()=>start(level)},350)}
+function chooseUpgrade(type){if(type==='damage')player.damage*=1.25;if(type==='range')player.range*=1.2;if(type==='speed')player.speed*=1.15;upgradeCard.style.display='none';state='play'}
+upgradeCard.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>chooseUpgrade(b.dataset.up));
+function interactPads(){for(const u of upgradePads){if(!u.used&&dist(player,u)<46){u.used=true;upgradesTaken++;state='upgrade';upgradeCard.style.display='block';break}}}
+function update(dt){
+ if(state!=='play')return;
+ let vx=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),vy=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0);vx+=joyVec.x;vy+=joyVec.y;let m=Math.hypot(vx,vy)||1;vx/=m;vy/=m;
+ player.x=clamp(player.x+vx*player.speed*dt,30,world.w-30);player.y=clamp(player.y+vy*player.speed*dt,30,world.h-30);player.spin+=dt*5.8;player.ifr=Math.max(0,player.ifr-dt);
+ for(const e of enemies){if(e.dead)continue;e.hitCd=Math.max(0,e.hitCd-dt);e.flash=Math.max(0,e.flash-dt);let dx=player.x-e.x,dy=player.y-e.y,dm=Math.hypot(dx,dy)||1;e.x+=dx/dm*e.speed*dt;e.y+=dy/dm*e.speed*dt;if(dm<player.range+e.r)damageEnemy(e,player.damage);if(dm<player.r+e.r+2&&player.ifr<=0){player.hp-=10+level*.12;player.ifr=.5;if(player.hp<=0)defeat()}}
+ enemies=enemies.filter(e=>!e.dead);
+ for(const d of drops){let dd=dist(player,d);if(dd<120){d.x+=(player.x-d.x)*dt*5;d.y+=(player.y-d.y)*dt*5}if(dd<24){if(d.type==='coin')stats.coins+=10;else stats.gems++;d.dead=true}}
+ drops=drops.filter(d=>!d.dead);
+ for(const c of crates){if(!c.open&&dist(player,c)<28){c.open=true;stats.chests++;stats.coins+=30;particles.push({x:c.x,y:c.y,life:.7})}}
+ interactPads();
+ for(const f of floaters){f.y-=24*dt;f.life-=dt}floaters=floaters.filter(f=>f.life>0);for(const p of particles)p.life-=dt;particles=particles.filter(p=>p.life>0);
+ cam.x+=(clamp(player.x-W/2,0,world.w-W)-cam.x)*Math.min(1,dt*7);cam.y+=(clamp(player.y-H/2,0,world.h-H)-cam.y)*Math.min(1,dt*7);updateHud()
+}
+function circle(x,y,r,fill){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill()}
+function draw(){
+ ctx.fillStyle='#173321';ctx.fillRect(0,0,W,H);
+ ctx.save();ctx.translate(-cam.x,-cam.y);
+ for(let gx=0;gx<world.w;gx+=90)for(let gy=0;gy<world.h;gy+=90){ctx.fillStyle=((gx+gy)/90)%2?'#183823':'#16331f';ctx.fillRect(gx,gy,90,90)}
+ for(const t of trees){ctx.fillStyle='#0d2216';circle(t.x+5,t.y+10,t.r,'#0d2216');circle(t.x,t.y,t.r,'#275d36');circle(t.x-10,t.y+4,t.r*.65,'#2f6b40')}
+ for(const c of crates){ctx.fillStyle=c.open?'#6f5530':'#8b6635';ctx.fillRect(c.x-15,c.y-15,30,30);ctx.strokeStyle='#35240f';ctx.strokeRect(c.x-15,c.y-15,30,30)}
+ for(const u of upgradePads){if(u.used)continue;let pulse=1+Math.sin(performance.now()/250)*.08;ctx.save();ctx.translate(u.x,u.y);ctx.scale(pulse,pulse);circle(0,0,34,'#ffbc3d33');circle(0,0,23,'#ffb22f55');ctx.fillStyle='#fff';ctx.font='700 12px system-ui';ctx.textAlign='center';ctx.fillText('Upgrade',0,-42);ctx.restore()}
+ for(const d of drops){ctx.font='18px system-ui';ctx.fillText(d.type==='coin'?'🪙':'💎',d.x-9,d.y+7)}
+ for(const e of enemies){if(e.dead)continue;circle(e.x,e.y,e.r+3,'#0005');circle(e.x,e.y,e.r,e.flash>0?'#fff':'#6f3b2f');ctx.fillStyle='#2c1915';ctx.fillRect(e.x-4,e.y-5,3,3);ctx.fillRect(e.x+3,e.y-5,3,3);ctx.fillStyle='#3d1111';ctx.fillRect(e.x-17,e.y-25,34,4);ctx.fillStyle='#d95949';ctx.fillRect(e.x-17,e.y-25,34*Math.max(0,e.hp/e.maxHp),4)}
+ // player
+ circle(player.x,player.y,player.r+8,'#ffffff0d');circle(player.x,player.y,player.r,'#b68a46');ctx.fillStyle='#f0d19a';ctx.fillRect(player.x-8,player.y-17,16,12);ctx.fillStyle='#4a2c13';ctx.fillRect(player.x-12,player.y-18,24,6);
+ // spinning weapon
+ ctx.save();ctx.translate(player.x,player.y);ctx.rotate(player.spin);ctx.strokeStyle='#cfd7d5aa';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,player.range*.72,0,Math.PI*1.5);ctx.stroke();for(let i=0;i<3;i++){let a=i*Math.PI*2/3;ctx.save();ctx.rotate(a);ctx.translate(player.range*.72,0);ctx.rotate(.75);ctx.fillStyle='#dfe8e5';ctx.fillRect(-4,-3,42,7);ctx.fillStyle='#765936';ctx.fillRect(-13,-4,12,9);ctx.restore()}ctx.restore();
+ // hp
+ ctx.fillStyle='#0008';ctx.fillRect(player.x-28,player.y-38,56,6);ctx.fillStyle='#57d46b';ctx.fillRect(player.x-28,player.y-38,56*(player.hp/player.maxHp),6);
+ for(const f of floaters){ctx.globalAlpha=f.life/.6;ctx.fillStyle='#fff';ctx.font='900 17px system-ui';ctx.textAlign='center';ctx.fillText(f.text,f.x,f.y)}ctx.globalAlpha=1;
+ ctx.restore();
+ // vignette
+ let g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.2,W/2,H/2,Math.max(W,H)*.7);g.addColorStop(0,'#0000');g.addColorStop(1,'#000b');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+}
+function loop(ts){let dt=Math.min(.033,(ts-last)/1000||0);last=ts;update(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+addEventListener('keydown',e=>{keys[e.code]=true});addEventListener('keyup',e=>{keys[e.code]=false});
+canvas.addEventListener('pointerdown',e=>{activePointer=e.pointerId;canvas.setPointerCapture(e.pointerId);moveJoy(e)});
+canvas.addEventListener('pointermove',e=>{if(e.pointerId===activePointer)moveJoy(e)});
+canvas.addEventListener('pointerup',e=>{if(e.pointerId===activePointer){activePointer=null;joyVec={x:0,y:0};stick.style.transform='translate(0,0)'}});
+function moveJoy(e){let r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,m=Math.hypot(dx,dy)||1,max=26;if(m>max){dx=dx/m*max;dy=dy/m*max}joyVec={x:dx/max,y:dy/max};stick.style.transform='translate('+dx+'px,'+dy+'px)'}
+play.onclick=()=>start(Math.min(unlocked,100));reset.onclick=()=>{localStorage.removeItem('huntUnlocked');unlocked=1;stats={coins:0,gems:0,chests:0,kills:0};updateHud();play.textContent='PLAY LEVEL 1'};
+updateHud();buildStage();
 })();
 </script>
 </body>
