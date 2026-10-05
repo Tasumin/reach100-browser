@@ -219,7 +219,7 @@ function rollRarity(){
 function rollGear(){
  const slots=Object.keys(gearDefs),slot=slots[Math.floor(Math.random()*slots.length)],defs=gearDefs[slot],def=defs[Math.floor(Math.random()*defs.length)],rar=rollRarity();
  const levelFactor=1+level*.035;let base=def[2]==='damage'?4:def[2]==='armor'?3:def[2]==='maxHp'?14:def[2]==='speed'?7:18;
- const value=Math.round(base*rar.mult*levelFactor*10)/10,power=Math.round(value*(def[2]==='maxHp'?1:def[2]==='pickup'?.8:2));
+ const value=Math.round(base*rar.mult*levelFactor*10)/10,power=Math.round(value*(def[2]==='maxHp'?1:(def[2]==='pickup'?0.8:2)));
  return {id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),slot,name:def[0],icon:def[1],stat:def[2],value,rarity:rar.name,cls:rar.cls,power}
 }
 function maybeGearFromChest(){
